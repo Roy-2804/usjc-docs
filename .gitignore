@@ -1,0 +1,46 @@
+# Node modules
+node_modules/
+
+# Build output
+/dist
+
+# Vite
+.vite/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+.eslintcache
+
+# IDE / Editor folders
+.vscode/
+.idea/
+
+# macOS Finder
+.DS_Store
+
+# Linux
+*~
+
+# Windows Installer files
+Thumbs.db
+
+# Jest (si usas Jest para pruebas)
+/coverage
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Parcel-bundler
+.cache/
+
+# SvelteKit (si usas Vite con Svelte)
+.svelte-kit/
+
+# Vite (con React)
+.vite/
