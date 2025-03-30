@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../services/authService";
-import logo from './assets/logo.png';
+import logo from '/logo.png';
 
 
 const Login = () => {
