@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
-import { getToken, logout } from "./services/authService";
+import { getToken } from "./services/authService";
 import Login from "./pages/login";
+import Homepage from "./pages/homepage";
 import './App.css'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
-    setIsAuthenticated(!!getToken());
+    //setIsAuthenticated(!!getToken());
   }, []);
 
   return (
     <div className="bg-[#002E60] min-w-screen">
       {isAuthenticated ? (
-        <div>
-          <h1>Bienvenido</h1>
-          <button onClick={() => { logout(); window.location.reload(); }}>Cerrar sesión</button>
-        </div>
+        <Homepage />
       ) : (
         <Login />
       )}
