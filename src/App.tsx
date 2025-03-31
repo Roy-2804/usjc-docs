@@ -11,7 +11,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen min-w-screen bg-[#002E60] ">
+    <div className="bg-[#002E60] min-w-screen">
       {isAuthenticated ? (
         <div>
           <h1>Bienvenido</h1>
