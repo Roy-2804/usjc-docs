@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { getToken } from "./services/authService";
 import Login from "./pages/login";
-import Homepage from "./pages/homepage";
+import Homepage from "./pages/Homepage";
+import Users from "./pages/UserList";
+import AddDocument from "./pages/AddDocument";
+import Header from "./components/header/header";
+import NoPage from "./pages/NoPage";
 import './App.css'
 
 function App() {
@@ -12,9 +17,17 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-[#002E60] min-w-screen">
+    <div className="page min-h-screen">
       {isAuthenticated ? (
-        <Homepage />
+        <Router>
+          <Header></Header>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/add" element={<AddDocument />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="*" element={<NoPage />} />
+          </Routes>
+        </Router>
       ) : (
         <Login />
       )}

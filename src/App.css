@@ -1,4 +1,14 @@
 /* tailwind */
 @import "tailwindcss";
 
-/* src/index.css */
+#root {
+  display: block;
+  width: 100%;
+}
+
+.page {
+  background-image: url('../public/background.PNG');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

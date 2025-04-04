@@ -1,9 +1,12 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import logo from '/logo.png';
+import { logout } from "../../services/authService";
 
 const navigation = [
-  { name: 'Listado', href: '#', current: true },
-  { name: 'Añadir expediente', href: '#', current: false },
+  { name: 'Listado', href: '/', current: true },
+  { name: 'Añadir expediente', href: '/add', current: false },
+  { name: 'Usuarios', href: '/users', current: false },
 ]
 
 function classNames(...classes: string[]) {
@@ -12,7 +15,8 @@ function classNames(...classes: string[]) {
 
 function Header() {
 	return (
-		<Disclosure as="nav">
+    <header className="border-b border-white">
+      <Disclosure as="nav">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -27,10 +31,9 @@ function Header() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <img
-                alt="Your Company"
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto"
-              />
+              src={logo}
+              alt="USJC Logo"
+              className="h-8 w-auto" />
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
@@ -40,8 +43,8 @@ function Header() {
                     href={item.href}
                     aria-current={item.current ? 'page' : undefined}
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'rounded-md px-3 py-2 text-sm font-medium',
+                      item.current ? 'bg-gray-900 !text-[#ffffff]' : '!text-[#ffffff] hover:underline',
+                      'rounded-md px-3 py-2 text-sm font-medium !text-[#ffffff]',
                     )}
                   >
                     {item.name}
@@ -54,7 +57,7 @@ function Header() {
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+                <MenuButton className="relative flex rounded-full !bg-white text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <img
@@ -77,12 +80,11 @@ function Header() {
                   </a>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Cerrar sesion
-                  </a>
+                  <button
+                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  onClick={() => { logout(); window.location.reload(); }}>
+                    Cerrar sesión
+                  </button>
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -99,8 +101,8 @@ function Header() {
               href={item.href}
               aria-current={item.current ? 'page' : undefined}
               className={classNames(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                'block rounded-md px-3 py-2 text-base font-medium',
+                item.current ? 'bg-gray-900 !text-[#ffffff]' : '!text-[#ffffff] hover:bg-gray-700 hover:underline',
+                'block rounded-md px-3 py-2 text-base font-medium !text-[#ffffff]',
               )}
             >
               {item.name}
@@ -109,6 +111,7 @@ function Header() {
         </div>
       </DisclosurePanel>
     </Disclosure>
+    </header>
 	);
 }
 
