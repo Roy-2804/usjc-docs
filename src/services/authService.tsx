@@ -7,6 +7,7 @@ export const login = async (email: string, password: string) => {
   localStorage.setItem("token", data.token);
 };
 
+
 export const register = async (email: string, password: string) => {
   await axios.post(`${API_URL}/register`, { email, password });
 };

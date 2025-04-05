@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { getToken } from "./services/authService";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Homepage from "./pages/Homepage";
 import Users from "./pages/UserList";
 import AddDocument from "./pages/AddDocument";
