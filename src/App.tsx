@@ -13,7 +13,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
-    //setIsAuthenticated(!!getToken());
+    setIsAuthenticated(!!getToken());
   }, []);
 
   return (
