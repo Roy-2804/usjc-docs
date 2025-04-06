@@ -1,28 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { newDoc } from "../services/docsService";
+import { FormData, Errors } from "../interface";
 
-interface FormData {
-  studentName: string;
-  idNumber: string;
-  idType: string;
-  grade: string;
-  career: string;
-  modalidadGraduacion: string;
-  documentosAdjuntos: string[];
-  convalidaciones: string[];
-  boletasMatricula: string[];
-  tcu: string[];
-  historialAcademico: string[];
-  documentacionAdicional: string[];
-  actasCalificacion: string[];
-}
-
-interface Errors {
-  studentName?: string;
-  idNumber?: string;
-  idType?: string;
-  grade?: string;
-  career?: string;
-}
 
 const createCheckboxGroup = (
   title: string,
@@ -92,14 +71,17 @@ function AddDocument() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      console.log("Formulario enviado con: ", formData);
-      alert("Contenido guardado exitosamente");
+      try {
+        await newDoc(formData);
+      } catch (error) {
+        console.log("Error al registrar expediente", error);
+      }
     }
   };
 

@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 const router = Router();
 
 // Login
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response): Promise<any> => {
   const { email, password } = req.body;
   
   try {
