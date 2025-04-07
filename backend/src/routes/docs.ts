@@ -84,7 +84,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
-    const expediente = await pool.query(`SELECT * FROM docs WHERE id=${id} `);
+    const expediente = await pool.query(`SELECT * FROM docs WHERE id=${id}`);
     res.status(200).json(expediente);
   } catch (err) {
     console.error("Error al obtener expedientes:", err);

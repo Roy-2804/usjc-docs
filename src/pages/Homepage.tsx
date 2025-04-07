@@ -80,7 +80,7 @@ function Homepage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.grade}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.studentState}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline cursor-pointer">
-                        <a href={`/doc/${doc.id}`} className="text-blue-600 hover:underline">Editar</a>
+                        <a href={`/doc/${doc.id}/edit`} className="text-blue-600 hover:underline">Editar</a>
                       </td>
                     </tr>
                   ))
