@@ -7,6 +7,7 @@ import Users from "./pages/UserList";
 import AddDocument from "./pages/AddDocument";
 import EditDocument from "./pages/EditDocument";
 import DocInfo from "./pages/DocInfo";
+import Profile from "./pages/Profile";
 import Header from "./components/header/header";
 import NoPage from "./pages/NoPage";
 import './App.css'
@@ -29,6 +30,7 @@ function App() {
             <Route path="/users" element={<Users />} />
             <Route path="/doc/:id_number" element={<DocInfo />} />
             <Route path="/doc/:id_number/edit" element={<EditDocument />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NoPage />} />
           </Routes>
         </Router>

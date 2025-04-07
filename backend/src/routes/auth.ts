@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { pool } from "../config/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { authMiddleware } from "../middleware/verifyToken";
 
 const router = Router();
 
@@ -25,6 +26,17 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
   }
 });
 
+router.get("/profile", authMiddleware, async (req: Request, res: Response): Promise<any> => {
+  const user = (req as any).user;
   
+  try {
+    const [rows]: any = await pool.query("SELECT id, name, email, created_at FROM users WHERE id = ?", [user.id]);
+    if (rows.length === 0) return res.status(404).json({ message: "Usuario no encontrado" });
+
+    return res.json(rows[0]);
+  } catch (error) {
+    return res.status(500).json({ message: "Error al obtener perfil", error });
+  }
+});  
 
 export default router;

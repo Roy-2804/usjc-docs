@@ -75,15 +75,15 @@ function Header() {
               >
                 <MenuItem>
                   <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                    href="/profile"
+                    className="block px-4 py-2 !text-sm !text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                   >
                     Mi perfil
                   </a>
                 </MenuItem>
                 <MenuItem>
                   <button
-                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  className="!bg-[#fff] block px-4 py-2 !text-sm text-gray-700 !data-focus:outline-hidden w-full text-left !hover:border-[#fff]"
                   onClick={() => { logout(); window.location.reload(); }}>
                     Cerrar sesión
                   </button>

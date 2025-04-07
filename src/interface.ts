@@ -30,3 +30,10 @@ export interface Errors {
     studentPeriod?: string;
     studentRegistration?: string;
 }
+
+export interface UserProfile {
+    id: number;
+    name: string;
+    email: string;
+    created_at: string;
+}
