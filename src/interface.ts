@@ -1,4 +1,5 @@
 export interface FormData {
+    id: string;
     studentName: string;
     idNumber: string;
     idType: string;
@@ -12,6 +13,10 @@ export interface FormData {
     historialAcademico: string[];
     documentacionAdicional: string[];
     actasCalificacion: string[];
+    studentCondition: string;
+    studentState: string;
+    studentPeriod: string;
+    studentRegistration: string;
 }
 
 export interface Errors {
@@ -20,4 +25,8 @@ export interface Errors {
     idType?: string;
     grade?: string;
     career?: string;
+    studentCondition?: string;
+    studentState?: string;
+    studentPeriod?: string;
+    studentRegistration?: string;
 }

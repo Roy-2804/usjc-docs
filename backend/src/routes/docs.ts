@@ -19,6 +19,10 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         historialAcademico,
         documentacionAdicional,
         actasCalificacion,
+        studentCondition,
+        studentState,
+        studentPeriod,
+        studentRegistration,
       } = req.body.data;
   const authHeader = req.headers.authorization;
 
@@ -34,8 +38,9 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       INSERT INTO docs (
         studentName, idNumber, idType, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
-        historialAcademico, documentacionAdicional, actasCalificacion, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        historialAcademico, documentacionAdicional, actasCalificacion, studentCondition,
+        studentState, studentPeriod, studentRegistration, creado_por
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await pool.query(query, [
@@ -52,6 +57,10 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       JSON.stringify(historialAcademico),
       JSON.stringify(documentacionAdicional),
       JSON.stringify(actasCalificacion),
+      studentCondition,
+      studentState,
+      studentPeriod,
+      studentRegistration,
       userId,
     ]);
 
@@ -59,6 +68,16 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
   } catch (err) {
     console.error("Error al registrar expediente:", err);
     res.status(500).json({ error: "Error al registrar expediente" });
+  }
+});
+
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM docs ORDER BY creado_en DESC LIMIT 20");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error al obtener expedientes:", err);
+    res.status(500).json({ error: "Error al obtener expedientes" });
   }
 });
 
