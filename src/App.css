@@ -12,3 +12,20 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.edit-form {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+}
+
+.edit-form::after {
+  background: url('/edit.svg') no-repeat center;
+  background-size: cover;
+  content: "";
+  display: flex;
+  height: 20px;
+  object-fit: cover;
+  width: 20px;
+}

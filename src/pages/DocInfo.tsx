@@ -45,10 +45,11 @@ const DocInfo = () => {
 
   return (
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div className="pt-8">
-        <div className="flex items-center justify-between mb-8">
+      <div className="pt-8 relative">
+        <div className="flex items-center justify-between mb-8 relative">
           <h1 className="text-white font-bold">Información del expediente</h1>
           <button onClick={generatePDF} className="block w-40 h-[40px] bg-primary text-white rounded-lg text-center !p-0">Descargar PDF</button>
+          <a className="edit-form bg-[#002E60] rounded-[50%] h-[40px] w-[40px] absolute right-[-20px] bottom-[-50px]" href={`/doc/${expediente?.id}/edit`}><span className='sr-only'>Edit</span></a>
         </div>
         {expediente ? (
         <div ref={pdfRef} className="p-4 bg-white shadow-lg w-full rounded-lg">
