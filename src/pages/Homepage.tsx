@@ -4,7 +4,7 @@ import { FormData } from "../interface";
 
 function Homepage() {
   const [expedientes, setExpedientes] = useState<FormData[]>([]);
-  console.log(expedientes)
+  
   useEffect(() => {
     const fetchExpedientes = async () => {
       try {
