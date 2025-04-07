@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Homepage from "./pages/Homepage";
 import Users from "./pages/UserList";
 import AddDocument from "./pages/AddDocument";
+import EditDocument from "./pages/EditDocument";
 import DocInfo from "./pages/DocInfo";
 import Header from "./components/header/header";
 import NoPage from "./pages/NoPage";
@@ -27,6 +28,7 @@ function App() {
             <Route path="/add" element={<AddDocument />} />
             <Route path="/users" element={<Users />} />
             <Route path="/doc/:id_number" element={<DocInfo />} />
+            <Route path="/doc/:id_number/edit" element={<EditDocument />} />
             <Route path="*" element={<NoPage />} />
           </Routes>
         </Router>
