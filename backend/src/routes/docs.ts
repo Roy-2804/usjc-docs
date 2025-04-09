@@ -9,6 +9,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentName,
         idNumber,
         idType,
+        gender,
         grade,
         career,
         modalidadGraduacion,
@@ -19,6 +20,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         historialAcademico,
         documentacionAdicional,
         actasCalificacion,
+        qualifications,
         studentCondition,
         studentState,
         studentPeriod,
@@ -36,17 +38,18 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
 
     const query = `
       INSERT INTO docs (
-        studentName, idNumber, idType, grade, career, modalidadGraduacion,
+        studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
-        historialAcademico, documentacionAdicional, actasCalificacion, studentCondition,
+        historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition,
         studentState, studentPeriod, studentRegistration, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await pool.query(query, [
       studentName,
       idNumber,
       idType,
+      gender,
       grade,
       career,
       modalidadGraduacion,
@@ -57,6 +60,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       JSON.stringify(historialAcademico),
       JSON.stringify(documentacionAdicional),
       JSON.stringify(actasCalificacion),
+      JSON.stringify(qualifications),
       studentCondition,
       studentState,
       studentPeriod,

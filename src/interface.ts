@@ -3,6 +3,7 @@ export interface FormData {
     studentName: string;
     idNumber: string;
     idType: string;
+    gender: string;
     grade: string;
     career: string;
     modalidadGraduacion: string;
@@ -13,6 +14,7 @@ export interface FormData {
     historialAcademico: string[];
     documentacionAdicional: string[];
     actasCalificacion: string[];
+    qualifications: string[];
     studentCondition: string;
     studentState: string;
     studentPeriod: string;
@@ -23,6 +25,7 @@ export interface Errors {
     studentName?: string;
     idNumber?: string;
     idType?: string;
+    gender?: string;
     grade?: string;
     career?: string;
     studentCondition?: string;

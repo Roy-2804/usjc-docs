@@ -1,13 +1,23 @@
-const users = [
-  { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member", id: 1 },
-  { name: "Courtney Henry", title: "Designer", email: "courtney.henry@example.com", role: "Admin", id: 2 },
-  { name: "Tom Cook", title: "Director of Product", email: "tom.cook@example.com", role: "Member", id: 3 },
-  { name: "Whitney Francis", title: "Copywriter", email: "whitney.francis@example.com", role: "Admin", id: 4 },
-  { name: "Leonard Krasner", title: "Senior Designer", email: "leonard.krasner@example.com", role: "Owner", id: 5 },
-  { name: "Floyd Miles", title: "Principal Designer", email: "floyd.miles@example.com", role: "Member", id: 6 },
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { UserProfile } from "../interface";
 
 const UserList = () => {
+  const [users, setUsers] = useState<UserProfile[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get("http://localhost:3001/api/users");
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Error al obtener usuarios:", err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
@@ -64,9 +74,8 @@ const UserList = () => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">identificación</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Grado</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Carrera</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Correo</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Creado</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
               </tr>
             </thead>
@@ -75,11 +84,10 @@ const UserList = () => {
                   users.map((user) => (
                     <tr key={user.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <a href={`/user/${user.id}`} className="text-blue-600 hover:underline">{user.name}</a>
+                        <a href={`/user/${user.id}`} className="text-blue-600 hover:underline">Roy Zamora</a>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.title}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.role}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.created_at}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline cursor-pointer">Edit</td>
                     </tr>
                   ))
