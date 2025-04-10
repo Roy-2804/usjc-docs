@@ -74,8 +74,8 @@ const DocInfo = () => {
           <div className='flex gap-2 text-xl items-center flex-wrap font-medium mb-10'>
             <p className='bg-gray-200 p-2 w-[25%]'>Nombre del estudiante:</p>
             <p className='bg-gray-200 p-2 w-[35%]'>{expediente.studentName}</p>
-            <p className='bg-gray-200 p-2 w-[20%]'>Año de egresión:</p>
-            <p className='bg-gray-200 p-2 w-[calc(20%-24px)]'>{expediente.studentRegistration}</p>
+            <p className='bg-gray-200 p-2 w-[20%]'>Sexo:</p>
+            <p className='bg-gray-200 p-2 w-[calc(20%-24px)]'>{expediente.gender}</p>
             <p className='bg-gray-200 p-2 w-[25%]'>Identificación:</p>
             <p className='bg-gray-200 p-2 w-[35%]'>{expediente.idNumber}</p>
             <p className='bg-gray-200 p-2 w-[15%]'>Tipo doc:</p>
@@ -85,14 +85,12 @@ const DocInfo = () => {
             <p className='bg-gray-200 p-2 w-[35%]'>{expediente.studentCondition}</p>
             <p className='bg-gray-200 p-2 w-[20%]'>Estatus:</p>
             <p className='bg-gray-200 p-2 w-[calc(20%-24px)]'>{expediente.studentState}</p>
-            <p className='bg-gray-200 p-2 w-[25%]'>Académica:</p>
+            <p className='bg-gray-200 p-2 w-[25%]'>Grado:</p>
             <p className='bg-gray-200 p-2 w-[35%]'>{expediente.grade}</p>
             <p className='bg-gray-200 p-2 w-[20%]'>Última Matrícula:</p>
             <p className='bg-gray-200 p-2 w-[calc(20%-24px)]'>{expediente.studentRegistration}</p>
             <p className='bg-gray-200 p-2 w-[25%]'>Carrera que cursa:</p>
-            <p className='bg-gray-200 p-2 w-[35%]'>{expediente.career}</p>
-            <p className='bg-gray-200 p-2 w-[20%]'>Grado:</p>
-            <p className='bg-gray-200 p-2 w-[calc(20%-24px)]'>{expediente.grade}</p>
+            <p className='bg-gray-200 p-2 w-[calc(75%-8px)]'>{expediente.career}</p>
           </div>
           <h3 className='text-3xl font-bold uppercase text-center mb-12'>DOCUMENTACIÓN</h3>
           <div className='text-xl max-w-[80%]'>

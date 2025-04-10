@@ -23,7 +23,6 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         qualifications,
         studentCondition,
         studentState,
-        studentPeriod,
         studentRegistration,
       } = req.body.data;
   const authHeader = req.headers.authorization;
@@ -41,8 +40,8 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
         historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition,
-        studentState, studentPeriod, studentRegistration, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        studentState, studentRegistration, creado_por
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await pool.query(query, [
@@ -63,7 +62,6 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       JSON.stringify(qualifications),
       studentCondition,
       studentState,
-      studentPeriod,
       studentRegistration,
       userId,
     ]);
@@ -76,9 +74,45 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
 });
 
 router.get("/", async (req: Request, res: Response) => {
+  const { studentName, idNumber, gender, grade, career, studentState } = req.query;
+  console.log(req.query)
+  let sql = "SELECT * FROM docs WHERE 1 = 1";
+  const values: any[] = [];
+
+  if (studentName) {
+    sql += " AND studentName LIKE ?";
+    values.push(`%${studentName}%`);
+  }
+
+  if (idNumber) {
+    sql += " AND idNumber LIKE ?";
+    values.push(`%${idNumber}%`);
+  }
+
+  if (gender) {
+    sql += " AND gender = ?";
+    values.push(gender);
+  }
+
+  if (grade) {
+    sql += " AND grade = ?";
+    values.push(grade);
+  }
+
+  if (career) {
+    sql += " AND career = ?";
+    values.push(career);
+  }
+
+  if (studentState) {
+    sql += " AND studentState = ?";
+    values.push(studentState);
+  }
+
+  console.log(sql);
   try {
-    const [rows] = await pool.query("SELECT * FROM docs ORDER BY creado_en DESC LIMIT 20");
-    res.status(200).json(rows);
+    const [rows] = await pool.query(sql, values);
+    res.json(rows);
   } catch (err) {
     console.error("Error al obtener expedientes:", err);
     res.status(500).json({ error: "Error al obtener expedientes" });
@@ -147,5 +181,4 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
     res.status(500).json({ error: "Error al actualizar expediente" });
   }
 });
-
 export default router;

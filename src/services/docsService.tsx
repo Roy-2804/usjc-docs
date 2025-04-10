@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormData } from "../interface";
+import { FormData, FilterData } from "../interface";
 const API_URL = "http://localhost:3001/api/docs";
 const token = localStorage.getItem("token");
 
@@ -8,6 +8,16 @@ export const newDoc = async (data: FormData) => {
     headers: {
       Authorization: `Bearer ${token}`
     }
+  });
+  return docData;
+};
+
+export const getDocs = async (data: FilterData = {}) => {
+  const docData = await axios.get(`${API_URL}/`, {
+    params: data,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
   return docData;
 };

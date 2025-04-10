@@ -17,7 +17,6 @@ export interface FormData {
     qualifications: string[];
     studentCondition: string;
     studentState: string;
-    studentPeriod: string;
     studentRegistration: string;
 }
 
@@ -30,7 +29,6 @@ export interface Errors {
     career?: string;
     studentCondition?: string;
     studentState?: string;
-    studentPeriod?: string;
     studentRegistration?: string;
 }
 
@@ -39,4 +37,13 @@ export interface UserProfile {
     name: string;
     email: string;
     created_at: string;
+}
+
+export interface FilterData {
+    studentName?: string;
+    idNumber?: string;
+    gender?: string;
+    grade?: string;
+    career?: string;
+    studentState?: string;
 }
