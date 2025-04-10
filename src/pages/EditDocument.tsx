@@ -49,6 +49,7 @@ function EditDocument() {
     studentName: "",
     idNumber: "",
     idType: "",
+    gender: "",
     grade: "",
     career: "",
     modalidadGraduacion: "",
@@ -59,10 +60,11 @@ function EditDocument() {
     historialAcademico: [],
     documentacionAdicional: [],
     actasCalificacion: [],
+    qualifications: [],
     studentCondition: "",
     studentState: "",
-    studentPeriod: "",
     studentRegistration: "",
+    link: "",
   });
   useEffect(() => {
     const fetchExpedientes = async () => {
@@ -75,6 +77,7 @@ function EditDocument() {
           studentName: expedienteData.studentName || "",
           idNumber: expedienteData.idNumber || "",
           idType: expedienteData.idType || "",
+          gender: expedienteData.gender || "",
           grade: expedienteData.grade || "",
           career: expedienteData.career || "",
           modalidadGraduacion: expedienteData.modalidadGraduacion || "",
@@ -85,10 +88,11 @@ function EditDocument() {
           historialAcademico: expedienteData.historialAcademico || [],
           documentacionAdicional: expedienteData.documentacionAdicional || [],
           actasCalificacion: expedienteData.actasCalificacion || [],
+          qualifications: expedienteData.qualifications || [],
           studentCondition: expedienteData.observaciones || "",
           studentState: expedienteData.fechaRegistro || "",
-          studentPeriod: expedienteData.documentoIdentidadAdjunto || "",
-          studentRegistration: expedienteData.fechaGraduacion || ""
+          studentRegistration: expedienteData.fechaGraduacion || "",
+          link: expedienteData.link || ""
         });
       } catch (err) {
         console.error("Error al obtener expediente:", err);
@@ -112,7 +116,6 @@ function EditDocument() {
     if (!formData.career) newErrors.career = "Debe seleccionar una carrera.";
     if (!formData.studentCondition) newErrors.studentCondition = "Debe indicar la condicion del estudiante.";
     if (!formData.studentState) newErrors.studentState = "Debe indicar si el estudiante esta activo o inactivo.";
-    if (!formData.studentPeriod) newErrors.studentPeriod = "Debe indicar si el estudiante esta graduado o en curso.";
     if (!formData.studentRegistration) newErrors.studentRegistration = "Debe indicar la ultima fecha de matricula del estudiante.";
     return newErrors;
   };
@@ -268,17 +271,6 @@ function EditDocument() {
             <option value="Inactivo">Inactivo</option>
           </select>
           {errors.studentState && <p className="text-red-500 text-sm">{errors.studentState}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="studentPeriod" className="block text-sm font-medium text-gray-700">¿Estudiante graduado o en curso?</label>
-          <select id="studentPeriod" name="studentPeriod" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" 
-          onChange={handleChange} value={formData.studentPeriod}>
-            <option value="">Seleccionar</option>
-            <option value="Graduado">Graduado</option>
-            <option value="En curso">En curso</option>
-          </select>
-          {errors.studentPeriod && <p className="text-red-500 text-sm">{errors.studentPeriod}</p>}
         </div>
 
         <div>

@@ -60,7 +60,7 @@ const DocInfo = () => {
           { expediente &&
           <div>
             <button onClick={generatePDF} className="block w-40 h-[40px] bg-primary text-white rounded-lg text-center !p-0">Descargar PDF</button>
-            <a className="edit-form bg-[#002E60] rounded-[50%] h-[40px] w-[40px] absolute right-[-20px] bottom-[-50px]" href={`/doc/${expediente?.id}/edit`}><span className='sr-only'>Edit</span></a>
+            <a className="edit-form bg-[#002E60] rounded-[50%] h-[40px] w-[40px] absolute right-[-20px] bottom-[-50px]" href={`/doc/node/${expediente?.id}/edit`}><span className='sr-only'>Edit</span></a>
           </div>
           }
           
