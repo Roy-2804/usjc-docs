@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from "axios";
 import { FormData } from "../interface";
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from 'jspdf';
 import logo from '/logo.png';
+import { getDoc } from "../services/docsService";
 
 const DocInfo = () => {
   const pdfRef = useRef<HTMLDivElement | null>(null);
@@ -13,19 +13,19 @@ const DocInfo = () => {
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
 
-  useEffect(() => {
-    const fetchExpedientes = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3001/api/docs/${id_number}`);
-        setExpediente(res.data[0][0]);
-      } catch (err) {
-        console.error("Error al obtener expediente:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchExpedientes = async (id_number: string) => {
+    try {
+      const res: FormData[][] = await getDoc(id_number);
+      setExpediente(res[0][0]);
+    } catch (err) {
+      console.error("Error al obtener expediente:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchExpedientes();
+  useEffect(() => {
+    if (id_number) fetchExpedientes(id_number);
   }, [id_number]);
 
   if (loading) return <p className="text-white font-bold mb-4">Cargando...</p>;
@@ -57,8 +57,13 @@ const DocInfo = () => {
       <div className="pt-8 relative pb-20">
         <div className="flex items-center justify-between mb-8 relative">
           <h1 className="text-white font-bold">Información del expediente</h1>
-          <button onClick={generatePDF} className="block w-40 h-[40px] bg-primary text-white rounded-lg text-center !p-0">Descargar PDF</button>
-          <a className="edit-form bg-[#002E60] rounded-[50%] h-[40px] w-[40px] absolute right-[-20px] bottom-[-50px]" href={`/doc/${expediente?.id}/edit`}><span className='sr-only'>Edit</span></a>
+          { expediente &&
+          <div>
+            <button onClick={generatePDF} className="block w-40 h-[40px] bg-primary text-white rounded-lg text-center !p-0">Descargar PDF</button>
+            <a className="edit-form bg-[#002E60] rounded-[50%] h-[40px] w-[40px] absolute right-[-20px] bottom-[-50px]" href={`/doc/${expediente?.id}/edit`}><span className='sr-only'>Edit</span></a>
+          </div>
+          }
+          
         </div>
         {expediente ? (
         <div ref={pdfRef} className="py-8 px-12 bg-white shadow-lg w-full rounded-lg">

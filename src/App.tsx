@@ -28,8 +28,8 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/add" element={<AddDocument />} />
             <Route path="/users" element={<Users />} />
-            <Route path="/doc/:id_number" element={<DocInfo />} />
-            <Route path="/doc/:id_number/edit" element={<EditDocument />} />
+            <Route path="/doc/node/:id_number" element={<DocInfo />} />
+            <Route path="/doc/node/:id_number/edit" element={<EditDocument />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NoPage />} />
           </Routes>

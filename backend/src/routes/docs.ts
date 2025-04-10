@@ -24,6 +24,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentCondition,
         studentState,
         studentRegistration,
+        link,
       } = req.body.data;
   const authHeader = req.headers.authorization;
 
@@ -40,8 +41,8 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
         historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition,
-        studentState, studentRegistration, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        studentState, studentRegistration, link, creado_por
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await pool.query(query, [
@@ -63,6 +64,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       studentCondition,
       studentState,
       studentRegistration,
+      link,
       userId,
     ]);
 
@@ -75,7 +77,6 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
 
 router.get("/", async (req: Request, res: Response) => {
   const { studentName, idNumber, gender, grade, career, studentState } = req.query;
-  console.log(req.query)
   let sql = "SELECT * FROM docs WHERE 1 = 1";
   const values: any[] = [];
 
@@ -109,7 +110,6 @@ router.get("/", async (req: Request, res: Response) => {
     values.push(studentState);
   }
 
-  console.log(sql);
   try {
     const [rows] = await pool.query(sql, values);
     res.json(rows);
@@ -119,7 +119,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/node/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     const expediente = await pool.query(`SELECT * FROM docs WHERE id=${id}`);
@@ -130,7 +130,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response): Promise<any> => {
+router.put("/node/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
   const {
     studentName,

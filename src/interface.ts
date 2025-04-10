@@ -18,6 +18,7 @@ export interface FormData {
     studentCondition: string;
     studentState: string;
     studentRegistration: string;
+    link: string;
 }
 
 export interface Errors {
