@@ -16,6 +16,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
+  console.log(id)
   try {
     const expediente = await pool.query(`SELECT * FROM docs WHERE id=${id}`);
     res.status(200).json(expediente);

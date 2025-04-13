@@ -37,7 +37,9 @@ export interface UserProfile {
     id: number;
     name: string;
     email: string;
+    pass: string;
     created_at: string;
+    role?: string;
 }
 
 export interface FilterData {
@@ -47,4 +49,19 @@ export interface FilterData {
     grade?: string;
     career?: string;
     studentState?: string;
+}
+
+export interface UserErrors {
+    id?: number;
+    name?: string;
+    email?: string;
+    pass?: string;
+    created_at?: string;
+    role?: string;
+}
+
+export interface JwtPayload {
+    id: string;
+    email?: string;
+    exp: number;
 }

@@ -30,3 +30,12 @@ export const getDoc = async (id: string = ""): Promise<FormData[][]> => {
   });
   return response.data;
 };
+
+export const updateDoc = async (id: string = ""): Promise<FormData[][]> => {
+  const response = await axios.get<FormData[][]>(`${API_URL}/node/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

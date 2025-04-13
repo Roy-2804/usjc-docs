@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { login } from "../services/authService";
 import logo from '/logo.png';
+import { useNavigate } from "react-router-dom";
 
 
-const Login = () => {
+
+const Login = ({ onLogin }: { onLogin: () => void }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
+      onLogin();
+      navigate("/home");
     } catch (error) {
       console.log("Error al iniciar sesión", error);
     }
