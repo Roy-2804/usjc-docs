@@ -1,6 +1,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { FilterData, FormData } from "../interface";
 import { getDocs } from "../services/docsService";
+import Header from "../components/header/header";
 
 function Homepage() {
   const [loading, setLoading] = useState(false);
@@ -56,6 +57,7 @@ function Homepage() {
   }
 
 	return <>
+    <Header />
 		<main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">	
     {loading && 
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

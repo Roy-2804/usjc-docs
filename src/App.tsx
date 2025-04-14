@@ -9,7 +9,6 @@ import EditDocument from "./pages/EditDocument";
 import DocInfo from "./pages/DocInfo";
 import Profile from "./pages/Profile";
 import UserForm from "./pages/UserForm";
-import Header from "./components/header/header";
 import NoPage from "./pages/NoPage";
 import DocumentForm from "./pages/DocumentForm";
 import './App.css'
@@ -48,7 +47,6 @@ function App() {
 
   return (
     <div className="page min-h-screen">
-      <Header />
       <Routes>
         <Route path="/home" element={<Homepage />} />
         <Route path="/add" element={<AddDocument />} />
@@ -59,7 +57,7 @@ function App() {
         <Route path="/manage-user" element={<UserForm />} />
         <Route path="/test" element={<DocumentForm />} />
         <Route path="/test/:id_number" element={<DocumentForm />} />
-        <Route path="/login" element={<Login onLogin={() => setIsAuthenticated(true)} />} />
+        <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} />} />
         <Route path="*" element={<NoPage />} />
       </Routes>
     </div>

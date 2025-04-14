@@ -3,6 +3,7 @@ import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { newDoc, updateDoc, getDoc } from "../services/docsService";
 import { FormData, Errors } from "../interface";
+import Header from "../components/header/header";
 
 const createCheckboxGroup = (
   title: string,
@@ -198,6 +199,8 @@ const DocumentForm = () => {
   if (loading) return <p className="text-white">Cargando...</p>;
 
   return (
+    <>
+    <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
         <h1 className="text-white font-bold mb-4">
@@ -269,6 +272,7 @@ const DocumentForm = () => {
         </form>
       </div>
     </main>
+    </>
   );
 };
 

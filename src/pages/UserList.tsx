@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserProfile } from "../interface";
+import Header from "../components/header/header";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -19,6 +20,8 @@ const UserList = () => {
   }, []);
 
   return (
+    <>
+    <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
         <h1 className="text-white font-bold mb-4">Listado de usuarios</h1>
@@ -103,6 +106,7 @@ const UserList = () => {
       </div>
       </div>
 		</main>
+    </>
   );
 };
 

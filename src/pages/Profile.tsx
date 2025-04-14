@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserProfile } from "../interface";
+import Header from "../components/header/header";
 
 const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -29,6 +30,8 @@ const Profile = () => {
   if (!user) return <p className="text-white font-bold mb-4">Cargando perfil...</p>;
 
   return (
+    <>
+    <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
         <h1 className="text-white font-bold mb-4">Mi perfil</h1>
@@ -47,6 +50,7 @@ const Profile = () => {
       </button>
       </div>
     </main>
+    </>
   );
 };
   

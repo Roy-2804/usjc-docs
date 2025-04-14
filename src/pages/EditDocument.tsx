@@ -3,6 +3,7 @@ import { newDoc } from "../services/docsService";
 import { FormData, Errors } from "../interface";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
+import Header from "../components/header/header";
 
 const createCheckboxGroup = (
   title: string,
@@ -141,6 +142,8 @@ function EditDocument() {
   if (loading) return <p className="text-white font-bold mb-4">Cargando...</p>;
 
 	return (
+    <>
+    <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
         <h1 className="text-white font-bold mb-4">Editar expediente para: <br /> {expediente?.studentName}</h1>
@@ -291,6 +294,7 @@ function EditDocument() {
       </form>
       </div>
 		</main>
+    </>
 	);
 }
 

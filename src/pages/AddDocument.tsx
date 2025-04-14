@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { newDoc } from "../services/docsService";
 import { FormData, Errors } from "../interface";
-
+import Header from "../components/header/header";
 
 const createCheckboxGroup = (
   title: string,
@@ -125,9 +125,11 @@ function AddDocument() {
       setLoading(false);
     }
   };
-
+  
 
 	return (
+    <>
+    <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
        {loading && 
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -314,6 +316,7 @@ function AddDocument() {
       </form>
       </div>
 		</main>
+    </>
 	);
 }
 

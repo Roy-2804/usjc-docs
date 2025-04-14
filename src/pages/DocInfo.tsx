@@ -5,6 +5,7 @@ import html2canvas from "html2canvas-pro";
 import { jsPDF } from 'jspdf';
 import logo from '/logo.png';
 import { getDoc } from "../services/docsService";
+import Header from "../components/header/header";
 
 const DocInfo = () => {
   const pdfRef = useRef<HTMLDivElement | null>(null);
@@ -48,6 +49,8 @@ const DocInfo = () => {
   };
 
   return (
+    <>
+    <Header />
     <main className={`mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 ${downloading ? "overflow-hidden h-screen" : ""}`}>
       {downloading && 
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -232,6 +235,7 @@ const DocInfo = () => {
       )}
       </div>
     </main>
+    </>
   );
 };
   
