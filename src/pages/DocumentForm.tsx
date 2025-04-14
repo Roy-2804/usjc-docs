@@ -26,9 +26,9 @@ const createCheckboxGroup = (
             checked={formData[name].includes(option)}
             onChange={(e) => {
               const value = e.target.value;
-              const current = formData[name];
+              const current = (formData as any)[name];
               const updated = current.includes(value)
-                ? current.filter((v) => v !== value)
+                ? current.split(",").filter((v: string) => v !== value)
                 : [...current, value];
               setFormData({ ...formData, [name]: updated });
             }}
@@ -79,34 +79,6 @@ const checkboxGroups = [
     },
 ];
 
-const selectFields = [
-    {
-      label: "Tipo de identificación",
-      name: "idType",
-      options: ["Cédula", "Pasaporte"]
-    },
-    {
-      label: "Género",
-      name: "gender",
-      options: ["Masculino", "Femenino", "Otro"]
-    },
-    {
-      label: "Grado",
-      name: "grade",
-      options: ["Bachillerato", "Licenciatura", "Maestría"]
-    },
-    {
-      label: "Condición del estudiante",
-      name: "studentCondition",
-      options: ["Regular", "Condicional"]
-    },
-    {
-      label: "Estado del estudiante",
-      name: "studentState",
-      options: ["Activo", "Inactivo", "Graduado"]
-    }
-];
-
 const DocumentForm = () => {
   const { id_number } = useParams();
   const navigate = useNavigate();
@@ -140,7 +112,7 @@ const DocumentForm = () => {
     setLoading(true);
     try {
       const res = await getDoc(id_number);
-      const data = res[0];
+      const data = res[0][0];
       setFormData({
         ...formData,
         ...data,
@@ -171,6 +143,7 @@ const DocumentForm = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData)
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -184,7 +157,7 @@ const DocumentForm = () => {
     try {
       setLoading(true);
       if (id_number) {
-        //await updateDoc(formData);
+        await updateDoc("", formData);
       } else {
         await newDoc(formData);
       }
@@ -207,35 +180,142 @@ const DocumentForm = () => {
           {id_number ? "Editar expediente" : "Añadir expediente"}
         </h1>
         <form className="space-y-4 bg-white p-6 rounded-lg" onSubmit={handleSubmit}>
-          {[
-            { label: "Nombre del estudiante", name: "studentName" },
-            { label: "Número de identificación", name: "idNumber" },
-            { label: "Tipo de identificación", name: "idType" },
-            { label: "Género", name: "gender" },
-            { label: "Grado", name: "grade" },
-            { label: "Carrera", name: "career" },
-            { label: "Modalidad de graduación", name: "modalidadGraduacion" },
-            { label: "Condición del estudiante", name: "studentCondition" },
-            { label: "Estado del estudiante", name: "studentState" },
-            { label: "Última matrícula", name: "studentRegistration" },
-            { label: "Calificaciones", name: "qualifications" },
-            { label: "Enlace", name: "link" },
-          ].map(({ label, name }) => (
-            <div key={name}>
-              <label htmlFor={name} className="block text-sm font-medium text-gray-700">{label}</label>
-              <input
-                type="text"
-                id={name}
-                name={name}
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2"
-                value={(formData as any)[name]}
-                onChange={handleChange}
-              />
-              {(errors as any)[name] && (
-                <p className="text-red-500 text-sm">{(errors as any)[name]}</p>
-              )}
-            </div>
-          ))}
+          <div>
+            <label htmlFor="studentName" className="block text-sm font-medium text-gray-700">Nombre del estudiante</label>
+            <input placeholder="Ingrese el nombre" id="studentName" name="studentName" type="text" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentName} />
+            {errors.studentName && <p className="text-red-500 text-sm">{errors.studentName}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="idNumber" className="block text-sm font-medium text-gray-700">Número de identificación</label>
+            <input placeholder="Ingrese la identificación" id="idNumber" name="idNumber" type="number" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idNumber}/>
+            {errors.idNumber && <p className="text-red-500 text-sm">{errors.idNumber}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="idType" className="block text-sm font-medium text-gray-700">Tipo de identificación</label>
+            <select id="idType" name="idType" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idType}>
+              <option value="">Seleccionar</option>
+              <option value="Cédula de identidad">Cédula de identidad</option>
+              <option value="Pasaporte">Pasaporte</option>
+              <option value="Cédula de residencia">Cédula de residencia</option>
+              <option value="Otro">Otro</option>
+            </select>
+            {errors.idType && <p className="text-red-500 text-sm">{errors.idType}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Sexo</label>
+            <select id="gender" name="gender" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.gender}>
+              <option value="">Seleccionar</option>
+              <option value="Hombre">Hombre</option>
+              <option value="Mujer">Mujer</option>
+            </select>
+            {errors.idType && <p className="text-red-500 text-sm">{errors.gender}</p>}
+          </div>
+
+          <div>
+          <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Grado</label>
+          <select id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.grade}>
+            <option value="">Seleccionar</option>
+            <option value="Bachillerato">Bachillerato</option>
+            <option value="Licenciatura">Licenciatura</option>
+            <option value="Maestría">Maestría</option>
+          </select>
+          {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="career" className="block text-sm font-medium text-gray-700">Carrera</label>
+            <select id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.career}>
+              <option value="">Seleccionar</option>
+              <option value="Administración de Empresas">Administración de Empresas</option>
+              <option value="Administración de Empresas con Énfasis en Gestión y Servicios de la Información">Administración de Empresas con Énfasis en Gestión y Servicios de la Información</option>
+              <option value="Administración de Empresas con Énfasis en Mercadeo y Ventas">Administración de Empresas con Énfasis en Mercadeo y Ventas</option>
+              <option value="Administración de Empresas con Énfasis en Recursos Humanos">Administración de Empresas con Énfasis en Recursos Humanos</option>
+              <option value="Administración de Empresas con Énfasis en Relaciones Laborales">Administración de Empresas con Énfasis en Relaciones Laborales</option>
+              <option value="Administración de Empresas con Énfasis en Transporte y Seguridad Vial">Administración de Empresas con Énfasis en Transporte y Seguridad Vial</option>
+              <option value="Contaduría Pública">Contaduría Pública</option>
+              <option value="Derecho">Derecho</option>
+            </select>
+            {errors.career && <p className="text-red-500 text-sm">{errors.career}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="modalidadGraduacion" className="block text-sm font-medium text-gray-700">Modalidad de graduación</label>
+            <select id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.modalidadGraduacion}>
+              <option value="">Seleccionar</option>
+              <option value="Tesina">Tesina</option>
+              <option value="Tesis">Tesis</option>
+              <option value="Pruebas de grado">Pruebas de grado</option>
+            </select>
+          </div>
+
+          {formData.modalidadGraduacion && (
+            <>
+              {formData.modalidadGraduacion === 'Tesina' || formData.modalidadGraduacion === 'Tesis' ? (
+                <>
+                  {createCheckboxGroup("Actas de calificación", "actasCalificacion", [
+                    "Acta de calificación de tesis o tesina",
+                  ], formData, setFormData)}
+                </>
+              ) : null}
+              {formData.modalidadGraduacion === 'Pruebas de grado' ? (
+                <>
+                  {createCheckboxGroup("Actas de calificación", "actasCalificacion", [
+                    "Acta de calificación de tesis o tesina",
+                    "Actas de calificación de pruebas de grado 1",
+                    "Actas de calificación de pruebas de grado 2",
+                    "Actas de calificación de pruebas de grado 3",
+                    "Actas de calificación de pruebas de grado 4"
+                  ], formData, setFormData)}
+                </>
+              ) : null}
+              <div>
+                <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
+                <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications} />
+              </div>
+            </>
+          )}
+
+          <div>
+            <label htmlFor="studentCondition" className="block text-sm font-medium text-gray-700">Condición del estudiante</label>
+            <select id="studentCondition" name="studentCondition" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentCondition}>
+              <option value="">Seleccionar</option>
+              <option value="Moroso">Moroso</option>
+              <option value="Al día">Al día</option>
+            </select>
+            {errors.studentCondition && <p className="text-red-500 text-sm">{errors.studentCondition}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="studentState" className="block text-sm font-medium text-gray-700">¿Estudiante activo o inactivo?</label>
+            <select id="studentState" name="studentState" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentState}>
+              <option value="">Seleccionar</option>
+              <option value="Activo">Activo</option>
+              <option value="Graduado">Graduado</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+            {errors.studentState && <p className="text-red-500 text-sm">{errors.studentState}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="studentRegistration" className="block text-sm font-medium text-gray-700">Fecha de última matrícula</label>
+            <input 
+              type="date" 
+              id="studentRegistration" 
+              name="studentRegistration"
+              onChange={handleChange}
+              value={formData.studentRegistration}
+              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
+            />
+            {errors.studentRegistration && <p className="text-red-500 text-sm">{errors.studentRegistration}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="link" className="block text-sm font-medium text-gray-700">Link de los archivos</label>
+            <input placeholder="Ingrese el link" id="link" name="link" type="text" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.link} />
+          </div>
 
           {checkboxGroups.map((group) => (
             <div key={group.name}>
@@ -253,7 +333,7 @@ const DocumentForm = () => {
                       onChange={() => {
                         const current = (formData as any)[group.name];
                         const updated = current.includes(option)
-                          ? current.filter((v: string) => v !== option)
+                          ? current.split(",").filter((v: string) => v !== option)
                           : [...current, option];
                         setFormData({ ...formData, [group.name]: updated });
                       }}

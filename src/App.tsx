@@ -14,9 +14,11 @@ import DocumentForm from "./pages/DocumentForm";
 import './App.css'
 import { JwtPayload } from "./interface";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sessionUser = getToken();
@@ -31,6 +33,7 @@ function App() {
           console.log("Token expirado");
           logout();
           setIsAuthenticated(false);
+          navigate("/");
         } else {
           // Token válido
           setIsAuthenticated(true);
@@ -38,11 +41,12 @@ function App() {
       } catch (error) {
         console.error("Token inválido:", error);
         setIsAuthenticated(false);
+        navigate("/");
       }
     } else {
       setIsAuthenticated(false);
-    }
-    
+      navigate("/");
+    }    
   }, []);
 
   return (

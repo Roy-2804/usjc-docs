@@ -31,11 +31,11 @@ export const getDoc = async (id: string = ""): Promise<FormData[][]> => {
   return response.data;
 };
 
-export const updateDoc = async (id: string = ""): Promise<FormData[][]> => {
-  const response = await axios.get<FormData[][]>(`${API_URL}/node/${id}`, {
+export const updateDoc = async (id: string = "", data: FormData) => {
+  const res =  await axios.post(`${API_URL}/update-doc`, { id, data }, {
     headers: {
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   });
-  return response.data;
+  return res.data;
 };
