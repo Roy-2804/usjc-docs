@@ -32,7 +32,7 @@ export const getDoc = async (id: string = ""): Promise<FormData[][]> => {
 };
 
 export const updateDoc = async (id: string = "", data: FormData) => {
-  const res =  await axios.post(`${API_URL}/update-doc`, { id, data }, {
+  const res =  await axios.put(`${API_URL}/update/node/${id}`, { data }, {
     headers: {
       Authorization: `Bearer ${token}`
     }

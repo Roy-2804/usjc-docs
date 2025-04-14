@@ -130,7 +130,7 @@ router.get("/node/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/node/:id", async (req: Request, res: Response): Promise<any> => {
+router.put("/update/node/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
   const {
     studentName,
@@ -148,7 +148,6 @@ router.put("/node/:id", async (req: Request, res: Response): Promise<any> => {
     actasCalificacion,
     studentCondition,
     studentState,
-    studentPeriod,
     studentRegistration,
   } = req.body;
 
@@ -157,11 +156,11 @@ router.put("/node/:id", async (req: Request, res: Response): Promise<any> => {
   if (!authHeader) return res.status(401).json({ error: "Token no proporcionado" });
 
   try {
-    const sql = `UPDATE expedientes SET
+    const sql = `UPDATE docs SET
       studentName = ?, idNumber = ?, idType = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentPeriod = ?,
+      actasCalificacion = ?, studentCondition = ?, studentState = ?,
       studentRegistration = ?
       WHERE id = ?`;
 
@@ -170,7 +169,7 @@ router.put("/node/:id", async (req: Request, res: Response): Promise<any> => {
       modalidadGraduacion, JSON.stringify(documentosAdjuntos), JSON.stringify(convalidaciones),
       JSON.stringify(boletasMatricula), JSON.stringify(tcu), JSON.stringify(historialAcademico),
       JSON.stringify(documentacionAdicional), JSON.stringify(actasCalificacion),
-      studentCondition, studentState, studentState, studentPeriod, studentRegistration,
+      studentCondition, studentState, studentState, studentRegistration,
       id
     ];
 

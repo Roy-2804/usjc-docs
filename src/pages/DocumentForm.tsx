@@ -157,7 +157,7 @@ const DocumentForm = () => {
     try {
       setLoading(true);
       if (id_number) {
-        await updateDoc("", formData);
+        await updateDoc(id_number, formData);
       } else {
         await newDoc(formData);
       }

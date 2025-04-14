@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { login } from "../services/authService";
 import logo from '/logo.png';
 import { useNavigate } from "react-router-dom";
 
 
 
-const Login = ({ onLogin }: { onLogin: () => void }) => {
+const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthenticated: boolean }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

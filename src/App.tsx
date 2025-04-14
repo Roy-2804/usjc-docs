@@ -61,7 +61,7 @@ function App() {
         <Route path="/manage-user" element={<UserForm />} />
         <Route path="/test" element={<DocumentForm />} />
         <Route path="/test/:id_number" element={<DocumentForm />} />
-        <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} />} />
+        <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} isAuthenticated={isAuthenticated} />} />
         <Route path="*" element={<NoPage />} />
       </Routes>
     </div>
