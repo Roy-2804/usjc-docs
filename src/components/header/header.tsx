@@ -2,12 +2,14 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from '/logo.png';
 import user from '/user.svg';
-import { logout } from "../../services/authService";
+import { logout, getUserRole } from "../../services/authService";
+import { useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 
 const navigation = [
-  { name: 'Listado', href: '/', current: true },
-  { name: 'Añadir expediente', href: '/add', current: false },
-  { name: 'Usuarios', href: '/users', current: false },
+  { name: 'Listado', href: '/home'},
+  { name: 'Añadir expediente', href: '/add'},
+  { name: 'Usuarios', href: '/users'},
 ]
 
 function classNames(...classes: string[]) {
@@ -15,6 +17,19 @@ function classNames(...classes: string[]) {
 }
 
 function Header() {
+  const location = useLocation();
+  const navigationWithCurrent = navigation.map((item) => ({
+    ...item,
+    current: location.pathname === item.href,
+  }));
+
+  useEffect(() => {
+    const userRole = getUserRole()
+    if (userRole != "admin") {
+      navigation.slice(0, -1)
+    }
+  }, []);
+
 	return (
     <header className="border-b border-white">
       <Disclosure as="nav">
@@ -40,7 +55,7 @@ function Header() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
+                {navigationWithCurrent.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
@@ -97,7 +112,7 @@ function Header() {
 
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3">
-          {navigation.map((item) => (
+          {navigationWithCurrent.map((item) => (
             <DisclosureButton
               key={item.name}
               as="a"

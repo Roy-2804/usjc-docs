@@ -20,3 +20,5 @@ export const logout = () => {
 export const getToken = () => localStorage.getItem("token");
 
 export const getUserInfo = () => JSON.parse(localStorage.getItem("user") || "[]");
+
+export const getUserRole = () => JSON.parse(localStorage.getItem("user") || "[]")?.role;
