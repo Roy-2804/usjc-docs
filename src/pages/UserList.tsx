@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserProfile } from "../interface";
 import Header from "../components/header/header";
+import editLogo from "/edit-icon-blue.svg";
+import trashLogo from "/trash.svg";
+import { getUserRole } from "../services/authService";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const role = getUserRole();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -24,7 +28,10 @@ const UserList = () => {
     <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
-        <h1 className="text-white font-bold mb-4">Listado de usuarios</h1>
+        <div className="flex justify-between items-center mb-5">
+          <h1 className="text-white font-bold">Listado de usuarios</h1>
+          <a href="/add/user" className="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 !text-white">Añadir usuario</a>
+        </div>
         <form className="bg-white p-4 shadow-lg rounded-2xl mb-4 flex flex-wrap gap-4 items-center">
         <h2 className="w-full text-lg font-semibold">Filtros</h2>
         
@@ -87,12 +94,19 @@ const UserList = () => {
                   users.map((user) => (
                     <tr key={user.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <a href={`/user/${user.id}`} className="text-blue-600 hover:underline">Roy Zamora</a>
+                        <a href={`/user/${user.id}`} className="text-blue-600 hover:underline">{ user.name }</a>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.created_at}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline cursor-pointer">
-                        <a href={`/user/${user.id}/edit`}>Editar</a>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline flex gap-4 justify-center">
+                        <a href={`/user/${user.id}/edit`} className="text-blue-600 hover:underline w-[20px] h-[20px] block">
+                            <img src={editLogo} alt="Edit icon" />
+                          </a>
+                          {role === "admin" &&
+                            <a href={`/user/${user.id}/delete`} className="text-blue-600 hover:underline w-[20px] h-[20px] block">
+                              <img src={trashLogo} alt="Edit icon" className="w-5 h-5"/>
+                            </a>
+                          }
                       </td>
                     </tr>
                   ))

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UserProfile } from "../interface";
-const API_URL = "http://localhost:3001/api/user";
+const API_URL = "http://localhost:3001/api/users";
 const token = localStorage.getItem("token");
 
 export const newUser = async (data: UserProfile) => {
@@ -22,8 +22,8 @@ export const getUsers = async (data: UserProfile = {}) => {
   return docData;
 };
 
-export const getUser = async (id: string = ""): Promise<UserProfile> => {
-  const response = await axios.get<FormData[][]>(`${API_URL}/user/${id}`, {
+export const getUser = async (id: string = ""): Promise<UserProfile[][]> => {
+  const response = await axios.get<UserProfile[][]>(`${API_URL}/user/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

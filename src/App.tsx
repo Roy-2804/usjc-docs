@@ -60,7 +60,8 @@ function App() {
         <Route path="/doc/node/:id_number/edit" element={<DocumentForm />} />
         <Route path="/doc/node/:id_number/delete" element={<DeleteDoc />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/manage-user" element={<UserForm />} />
+        <Route path="/add/user" element={<UserForm />} />
+        <Route path="/user/:id_number/edit" element={<UserForm />} />
         <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} isAuthenticated={isAuthenticated} />} />
         <Route path="/user/:id_number" element={<DocInfo />} />
         <Route path="*" element={<NoPage />} />
