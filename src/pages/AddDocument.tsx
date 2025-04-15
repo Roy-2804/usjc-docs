@@ -251,7 +251,6 @@ function AddDocument() {
             {formData.modalidadGraduacion === 'Pruebas de grado' ? (
               <>
                 {createCheckboxGroup("Actas de calificación", "actasCalificacion", [
-                  "Acta de calificación de tesis o tesina",
                   "Actas de calificación de pruebas de grado 1",
                   "Actas de calificación de pruebas de grado 2",
                   "Actas de calificación de pruebas de grado 3",

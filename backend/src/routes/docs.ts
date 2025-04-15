@@ -176,7 +176,6 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     ];
 
     const resultado = await pool.query(sql, values);
-    console.log(resultado);
     res.status(200).json({ message: "Expediente actualizado correctamente" });
   } catch (error) {
     console.error("Error al actualizar expediente:", error);

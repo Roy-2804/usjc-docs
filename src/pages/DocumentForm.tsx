@@ -27,9 +27,10 @@ const createCheckboxGroup = (
             onChange={(e) => {
               const value = e.target.value;
               const current = (formData as any)[name];
-              const updated = current.includes(value)
-                ? current.split(",").filter((v: string) => v !== value)
-                : [...current, value];
+              const json = Array.isArray(current) ? current : JSON.parse(current)
+              const updated = json.includes(value)
+                 ? json.filter((v: string) => v !== value)
+                 : [...json, value];
               setFormData({ ...formData, [name]: updated });
             }}
             className="rounded border-gray-300"
@@ -71,12 +72,7 @@ const checkboxGroups = [
       title: "Documentación adicional",
       name: "documentacionAdicional",
       options: ["Copia de títulos obtenidos", "Otros"]
-    },
-    {
-      title: "Actas de calificación",
-      name: "actasCalificacion",
-      options: ["Acta de calificación de tesis o tesina", "Actas de calificación de pruebas de grado 1", "Actas de calificación de pruebas de grado 2", "Actas de calificación de pruebas de grado 3", "Actas de calificación de pruebas de grado 4"]
-    },
+    }
 ];
 
 const DocumentForm = () => {
@@ -142,8 +138,19 @@ const DocumentForm = () => {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData)
+    const { name, value, id } = e.target;
+
+    const updatedForm = {
+      ...formData,
+      [name]: value,
+    };
+
+    if (id === "modalidadGraduacion" ) {
+      updatedForm.qualifications = [];
+      updatedForm.actasCalificacion = [];
+    }
+
+    setFormData(updatedForm);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -161,7 +168,7 @@ const DocumentForm = () => {
       } else {
         await newDoc(formData);
       }
-      //navigate("/home");
+      navigate("/home");
     } catch (error) {
       console.error("Error al guardar expediente:", error);
     } finally {
@@ -263,7 +270,6 @@ const DocumentForm = () => {
               {formData.modalidadGraduacion === 'Pruebas de grado' ? (
                 <>
                   {createCheckboxGroup("Actas de calificación", "actasCalificacion", [
-                    "Acta de calificación de tesis o tesina",
                     "Actas de calificación de pruebas de grado 1",
                     "Actas de calificación de pruebas de grado 2",
                     "Actas de calificación de pruebas de grado 3",
@@ -332,9 +338,10 @@ const DocumentForm = () => {
                       checked={(formData as any)[group.name].includes(option)}
                       onChange={() => {
                         const current = (formData as any)[group.name];
-                        const updated = current.includes(option)
-                          ? current.split(",").filter((v: string) => v !== option)
-                          : [...current, option];
+                        const json = Array.isArray(current) ? current : JSON.parse(current)
+                        const updated = json.includes(option)
+                          ? json.filter((v: string) => v !== option)
+                          : [...json, option];
                         setFormData({ ...formData, [group.name]: updated });
                       }}
                       className="rounded border-gray-300"

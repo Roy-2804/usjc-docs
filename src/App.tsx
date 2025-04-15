@@ -54,15 +54,13 @@ function App() {
     <div className="page min-h-screen">
       <Routes>
         <Route path="/home" element={<Homepage />} />
-        <Route path="/add" element={<AddDocument />} />
+        <Route path="/add" element={<DocumentForm />} />
         <Route path="/users" element={<Users />} />
         <Route path="/doc/node/:id_number" element={<DocInfo />} />
-        <Route path="/doc/node/:id_number/edit" element={<EditDocument />} />
+        <Route path="/doc/node/:id_number/edit" element={<DocumentForm />} />
         <Route path="/doc/node/:id_number/delete" element={<DeleteDoc />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/manage-user" element={<UserForm />} />
-        <Route path="/test" element={<DocumentForm />} />
-        <Route path="/test/:id_number" element={<DocumentForm />} />
         <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} isAuthenticated={isAuthenticated} />} />
         <Route path="/user/:id_number" element={<DocInfo />} />
         <Route path="*" element={<NoPage />} />
