@@ -132,8 +132,7 @@ router.get("/node/:id", async (req: Request, res: Response) => {
 
 router.put("/update/node/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
-  const intId = parseInt(id, 10);
-
+  
   const {
     studentName,
     idNumber,
@@ -152,29 +151,43 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     studentCondition,
     studentState,
     studentRegistration,
-  } = req.body;
-
+    link,
+  } = req.body.data;
+  
   const authHeader = req.headers.authorization;
 
   if (!authHeader) return res.status(401).json({ error: "Token no proporcionado" });
-
+  
   try {
     const sql = `UPDATE docs SET
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?
       WHERE id = ?`;
 
     const values = [
-      studentName, idNumber, idType, grade, gender, career,
-      modalidadGraduacion, JSON.stringify(documentosAdjuntos), JSON.stringify(convalidaciones),
-      JSON.stringify(boletasMatricula), JSON.stringify(tcu), JSON.stringify(historialAcademico),
-      JSON.stringify(documentacionAdicional), JSON.stringify(actasCalificacion),
-      studentCondition, studentState, studentState, studentRegistration,
-      intId
+      studentName,
+      idNumber,
+      idType,
+      gender,
+      grade,
+      career,
+      modalidadGraduacion,
+      JSON.stringify(documentosAdjuntos),
+      JSON.stringify(convalidaciones),
+      JSON.stringify(boletasMatricula),
+      JSON.stringify(tcu),
+      JSON.stringify(historialAcademico),
+      JSON.stringify(documentacionAdicional),
+      JSON.stringify(actasCalificacion),
+      studentCondition,
+      studentState,
+      studentRegistration,
+      link,
+      id,
     ];
-
+    
     const resultado = await pool.query(sql, values);
     res.status(200).json({ message: "Expediente actualizado correctamente" });
   } catch (error) {
