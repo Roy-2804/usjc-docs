@@ -183,4 +183,23 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     res.status(500).json({ error: "Error al actualizar expediente" });
   }
 });
+
+router.delete("/delete/node/:id", async (req: Request, res: Response): Promise<any> => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await pool.query("DELETE FROM docs WHERE id = ?", [id]);
+
+    if ((result as any).affectedRows === 0) {
+      return res.status(404).json({ message: "Expediente no encontrado" });
+    }
+
+    res.json({ message: "Expediente eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar Expediente:", error);
+    res.status(500).json({ message: "Error al eliminar Expediente" });
+  }
+});
+
+
 export default router;

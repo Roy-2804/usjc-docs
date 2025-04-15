@@ -1,7 +1,10 @@
 import { useEffect, useState, FormEvent } from "react";
 import { FilterData, FormData } from "../interface";
 import { getDocs } from "../services/docsService";
+import { getUserRole } from "../services/authService";
 import Header from "../components/header/header";
+import editLogo from "/edit-icon-blue.svg";
+import trashLogo from "/trash.svg";
 
 function Homepage() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +17,7 @@ function Homepage() {
     career: "",
     studentState: ""
   });
-
+  const role = getUserRole();
 
   useEffect(() => {
     fetchExpedientes();
@@ -159,8 +162,15 @@ function Homepage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.grade}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-[50px] overflow-x-scroll no-scrollbar">{doc.career}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.studentState}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline cursor-pointer">
-                        <a href={`/doc/node/${doc.id}/edit`} className="text-blue-600 hover:underline">Editar</a>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline flex gap-4 justify-center">
+                        <a href={`/doc/node/${doc.id}/edit`} className="text-blue-600 hover:underline w-[20px] h-[20px] block">
+                          <img src={editLogo} alt="Edit icon" />
+                        </a>
+                        {role === "admin" &&
+                          <a href={`/doc/node/${doc.id}/delete`} className="text-blue-600 hover:underline w-[20px] h-[20px] block">
+                            <img src={trashLogo} alt="Edit icon" className="w-5 h-5"/>
+                          </a>
+                        }
                       </td>
                     </tr>
                   ))

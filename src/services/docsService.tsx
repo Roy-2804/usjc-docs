@@ -40,3 +40,13 @@ export const updateDoc = async (id: string = "", data: FormData) => {
   console.log(res);
   return res.data;
 };
+
+export const deleteDoc = async (id: string) => {
+  const token = localStorage.getItem("token");
+  const res = await axios.delete(`${API_URL}/delete/node/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};

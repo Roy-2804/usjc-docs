@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import UserForm from "./pages/UserForm";
 import NoPage from "./pages/NoPage";
 import DocumentForm from "./pages/DocumentForm";
+import DeleteDoc from "./pages/DeleteDoc";
 import './App.css'
 import { JwtPayload } from "./interface";
 import { jwtDecode } from "jwt-decode";
@@ -57,6 +58,7 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/doc/node/:id_number" element={<DocInfo />} />
         <Route path="/doc/node/:id_number/edit" element={<EditDocument />} />
+        <Route path="/doc/node/:id_number/delete" element={<DeleteDoc />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/manage-user" element={<UserForm />} />
         <Route path="/test" element={<DocumentForm />} />

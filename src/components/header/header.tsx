@@ -3,7 +3,6 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from '/logo.png';
 import user from '/user.svg';
 import { logout, getUserRole } from "../../services/authService";
-import { useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
 const navigation = [
@@ -18,17 +17,17 @@ function classNames(...classes: string[]) {
 
 function Header() {
   const location = useLocation();
-  const navigationWithCurrent = navigation.map((item) => ({
+  const role = getUserRole();
+
+  const filteredNavigation = navigation.filter((item, index) => {
+    if (index === 2 && role !== 'admin') return false;
+    return true;
+  });
+
+  const navigationWithCurrent = filteredNavigation .map((item) => ({
     ...item,
     current: location.pathname === item.href,
   }));
-
-  useEffect(() => {
-    const userRole = getUserRole()
-    if (userRole != "admin") {
-      navigation.slice(0, -1)
-    }
-  }, []);
 
 	return (
     <header className="border-b border-white">
