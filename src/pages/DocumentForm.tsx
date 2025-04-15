@@ -161,7 +161,7 @@ const DocumentForm = () => {
       } else {
         await newDoc(formData);
       }
-      navigate("/home");
+      //navigate("/home");
     } catch (error) {
       console.error("Error al guardar expediente:", error);
     } finally {

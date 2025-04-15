@@ -37,5 +37,6 @@ export const updateDoc = async (id: string = "", data: FormData) => {
       Authorization: `Bearer ${token}`
     }
   });
+  console.log(res);
   return res.data;
 };

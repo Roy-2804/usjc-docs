@@ -91,7 +91,9 @@ const UserList = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.created_at}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline cursor-pointer">Edit</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline cursor-pointer">
+                        <a href={`/user/${user.id}/edit`}>Editar</a>
+                      </td>
                     </tr>
                   ))
                 ) : (

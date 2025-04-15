@@ -132,10 +132,13 @@ router.get("/node/:id", async (req: Request, res: Response) => {
 
 router.put("/update/node/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
+  const intId = parseInt(id, 10);
+
   const {
     studentName,
     idNumber,
     idType,
+    gender,
     grade,
     career,
     modalidadGraduacion,
@@ -157,23 +160,23 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
 
   try {
     const sql = `UPDATE docs SET
-      studentName = ?, idNumber = ?, idType = ?, grade = ?, career = ?,
+      studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?,
-      studentRegistration = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?
       WHERE id = ?`;
 
     const values = [
-      studentName, idNumber, idType, grade, career,
+      studentName, idNumber, idType, grade, gender, career,
       modalidadGraduacion, JSON.stringify(documentosAdjuntos), JSON.stringify(convalidaciones),
       JSON.stringify(boletasMatricula), JSON.stringify(tcu), JSON.stringify(historialAcademico),
       JSON.stringify(documentacionAdicional), JSON.stringify(actasCalificacion),
       studentCondition, studentState, studentState, studentRegistration,
-      id
+      intId
     ];
 
-    await pool.query(sql, values);
+    const resultado = await pool.query(sql, values);
+    console.log(resultado);
     res.status(200).json({ message: "Expediente actualizado correctamente" });
   } catch (error) {
     console.error("Error al actualizar expediente:", error);

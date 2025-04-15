@@ -1,31 +1,17 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { UserProfile } from "../interface";
 import Header from "../components/header/header";
+import { getUserInfo } from "../services/authService";
+import userPicture from '/user.svg';
 
 const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log(token);
-        const res = await axios.get("http://localhost:3001/api/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setUser(res.data);
-      } catch (error) {
-        console.error("Error al obtener perfil:", error);
-      }
-    };
-
-    fetchProfile();
-  }, [navigate]);
+    const data = getUserInfo() as UserProfile;
+    setUser(data);
+  }, []);
 
   if (!user) return <p className="text-white font-bold mb-4">Cargando perfil...</p>;
 
@@ -35,19 +21,25 @@ const Profile = () => {
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div className="pt-8">
         <h1 className="text-white font-bold mb-4">Mi perfil</h1>
-        <p><strong>Nombre:</strong> {user.name}</p>
-        <p><strong>Correo:</strong> {user.email}</p>
-        <p><strong>Registrado el:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
-
-      <button
-        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-        onClick={() => {
-          localStorage.removeItem("token");
-          navigate("/login");
-        }}
-      >
-        Cerrar sesión
-      </button>
+        <div className="flex items-center justify-center mt-20 w-full">
+          <div className="bg-white rounded-xl shadow-md p-8 w-full text-center">
+            <div className="flex items-center justify-center w-26 h-26 mx-auto rounded-full shadow-lg">
+              <img
+                className="object-cover"
+                src={userPicture}
+                alt={`${name}'s profile`}
+              />
+            </div>
+            <h2 className="text-4xl font-bold mt-4 text-gray-800">{user.name}</h2>
+            <p className="text-gray-600 mt-2">Correo electrónico: {user.email}</p>
+            <p className="text-sm text-gray-400 mt-1">
+              Fecha de creación:
+              {user.created_at
+                ? ` ${new Date(user.created_at).toLocaleDateString()}`
+                : " no disponible"}
+            </p>
+          </div>
+        </div>
       </div>
     </main>
     </>

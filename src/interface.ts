@@ -34,11 +34,11 @@ export interface Errors {
 }
 
 export interface UserProfile {
-    id: number;
-    name: string;
-    email: string;
-    pass: string;
-    created_at: string;
+    id?: number;
+    name?: string;
+    email?: string;
+    pass?: string;
+    created_at?: string;
     role?: string;
 }
 
