@@ -18,6 +18,7 @@ const DocInfo = () => {
     try {
       const res: FormData[][] = await getDoc(id_number);
       setExpediente(res[0][0]);
+      console.log(res)
     } catch (err) {
       console.error("Error al obtener expediente:", err);
     } finally {
@@ -34,16 +35,59 @@ const DocInfo = () => {
   const generatePDF = async () => {
     setDownloading(true);
     if (pdfRef.current) {
-      const doc = new jsPDF({
+      const originalCanvas = await html2canvas(pdfRef.current, { scale: 2 });
+
+      const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
       });
-      const canvas = await html2canvas(pdfRef.current, { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
-      doc.addImage(imgData, "PNG", 10, 10, 190, 0);
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pdfWidth;
+      const imgHeight = (originalCanvas.height * pdfWidth) / originalCanvas.width;
+
+      const pageHeightPx = (originalCanvas.width * pdfHeight) / pdfWidth; // altura de página en px
+
+      let renderedHeight = 0;
+      let pageIndex = 0;
+
+      while (renderedHeight < originalCanvas.height) {
+        const canvasFragment = document.createElement("canvas");
+        const context = canvasFragment.getContext("2d");
+
+        // Tamaño del fragmento
+        canvasFragment.width = originalCanvas.width;
+        canvasFragment.height = Math.min(pageHeightPx, originalCanvas.height - renderedHeight);
+
+        // Copiar fragmento del canvas original
+        context?.drawImage(
+          originalCanvas,
+          0,
+          renderedHeight,
+          originalCanvas.width,
+          canvasFragment.height,
+          0,
+          0,
+          originalCanvas.width,
+          canvasFragment.height
+        );
+
+        const imgData = canvasFragment.toDataURL("image/png");
+
+        const paddingTop = pageIndex === 0 ? 0 : 35; // 35mm de padding desde la segunda página
+
+        if (pageIndex > 0) pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, paddingTop, imgWidth, (canvasFragment.height * pdfWidth) / originalCanvas.width);
+
+        renderedHeight += canvasFragment.height;
+        pageIndex++;
+      }
+
       const fileName = `Expediente de ${expediente?.studentName}.pdf`;
-      doc.save(fileName);
+      pdf.save(fileName);
     }
     setDownloading(false);
   };
@@ -104,129 +148,191 @@ const DocInfo = () => {
           <div className='text-xl max-w-[80%]'>
             <div className='flex justify-between mb-4'>
               <p>Copia del documento de identificación</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Copia del documento de identificación")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Fotografía</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Fotografía")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Título de secundaria</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Título de secundaria")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Verificación plataforma del MEP</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Verificación plataforma del MEP")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Certificación de estudios cursados en otras instituciones <br /> (aplica para convalidación de materias)</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-4'>
-              <p>Programas de materias convalidadas</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Certificación de estudios cursados en otras instituciones")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Certificación de TCU (otra universidad)</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Certificación de TCU (otra universidad)")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Validación de títulos y apostillas en caso de estudios en el exterior  <br />
               (aplica para estudiantes que cursaron estudios en el exterior)
               </p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Documento de validación de títulos y apostillas en caso de estudios en el exterior")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Copia del título universitario requerido <br />(aplica para matrícula en licenciatura o maestría)</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentosAdjuntos.includes("Copia del título universitario requerido")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
           </div>
           <h3 className='text-3xl font-bold uppercase text-center my-12'>CONVALIDACIONES</h3>
           <div className='text-xl max-w-[80%]'>
             <div className='flex justify-between mb-4'>
               <p>Pre estudio de convalidación</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.convalidaciones.includes("Pre estudio de convalidación")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Resolución de convalidación de estudios</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.convalidaciones.includes("Resolución de convalidación de estudios")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
           </div>
           <h3 className='text-3xl font-bold uppercase text-center my-12'>TRABAJO COMUNAL <br />UNIVERSITARIO TCU</h3>
           <div className='text-xl max-w-[80%]'>
             <div className='flex justify-between mb-4'>
               <p>Carta de aprobación – solicitud</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.tcu.includes("Carta de aprobación – solicitud")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Oficio de aprobación de la universidad</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.tcu.includes("Oficio de aprobación de la universidad")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Oficio de aprobación de la institución u organización</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.tcu.includes("Oficio de aprobación de la institución u organización")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Bitácora</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.tcu.includes("Bitácora")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Informe final del estudiante</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.tcu.includes("Informe final del estudiante")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
             <div className='flex justify-between mb-4'>
               <p>Oficio de cierre de la universidad</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.tcu.includes("Oficio de cierre de la universidad")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
           </div>
           <h3 className='text-3xl font-bold uppercase text-center my-12'>HISTORIAL ACADÉMICO</h3>
           <div className='text-xl max-w-[80%]'>
             <div className='flex justify-between mb-4'>
               <p>Historial académico de egreso</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.historialAcademico.includes("Historial académico de egreso")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
           </div>
           <h3 className='text-3xl font-bold uppercase text-center my-12'>MODALIDAD DE GRADUACIÓN</h3>
           <div className='text-xl max-w-[80%]'>
-            <div className='flex justify-between mb-4'>
-              <p>Tesina</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-4'>
-              <p>Tesina</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-4'>
-              <p>Tesis</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-14'>
-              <p>Pruebas de grado</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-14'>
-              <p>Acta de calificación de tesis o tesina</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-4'>
-              <p>Actas de calificación de pruebas de grado 1</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-4'>
-              <p>Actas de calificación de pruebas de grado 2</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-4'>
-              <p>Actas de calificación de pruebas de grado 3</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
-            <div className='flex justify-between mb-14'>
-              <p>Actas de calificación de pruebas de grado 4</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
-            </div>
+          {expediente.modalidadGraduacion ? (
+                <>
+                  <div className='flex justify-between mb-4'>
+                    <p>{expediente.modalidadGraduacion}</p>
+                    <div className='bg-green-500 h-[20px] w-[20px]'></div>
+                  </div>
+
+                  {(typeof expediente.actasCalificacion === "string"
+                    ? JSON.parse(expediente.actasCalificacion)
+                    : expediente.actasCalificacion
+                  ).map((acta: string, idx: number) => (
+                    <div className='flex justify-between mb-4' key={idx}>
+                      <p>{acta}</p>
+                      <div className="bg-green-500 h-[20px] w-[20px]"></div>
+                    </div>
+                  ))}
+
+                  {typeof expediente.qualifications === "string" &&
+                    <div className='flex gap-4 mb-4'>
+                      <p>Notas: </p>
+                      {(expediente.qualifications as string).split(",").map((q, idx) => (
+                        <span key={idx}>{q.trim().replace(/"/g, "")}, </span>
+                      ))}
+                    </div>
+                  }
+
+                </>
+              ) : (
+                <p className='flex justify-between mb-4'>Modalidad de graduación no presentada</p>
+              )}
             <div className='flex justify-between mb-4'>
               <p>Copia de títulos obtenidos</p>
-              <div className='bg-gray-400 h-[20px] w-[20px]'></div>
+              <div className={`bg-gray-400 h-[20px] w-[20px] ${
+                expediente.documentacionAdicional.includes("Copia de títulos obtenidos")
+                  ? 'bg-green-500'
+                  : ''
+              }`}></div>
             </div>
           </div>
         </div>
