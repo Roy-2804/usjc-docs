@@ -4,14 +4,13 @@ import { getToken, logout } from "./services/authService";
 import Login from "./pages/Login";
 import Homepage from "./pages/Homepage";
 import Users from "./pages/UserList";
-import AddDocument from "./pages/AddDocument";
-import EditDocument from "./pages/EditDocument";
 import DocInfo from "./pages/DocInfo";
 import Profile from "./pages/Profile";
 import UserForm from "./pages/UserForm";
 import NoPage from "./pages/NoPage";
 import DocumentForm from "./pages/DocumentForm";
 import DeleteDoc from "./pages/DeleteDoc";
+import DeleteUser from "./pages/DeleteUser";
 import './App.css'
 import { JwtPayload } from "./interface";
 import { jwtDecode } from "jwt-decode";
@@ -62,6 +61,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/add/user" element={<UserForm />} />
         <Route path="/user/:id_number/edit" element={<UserForm />} />
+        <Route path="/user/:id_number/delete" element={<DeleteUser />} />
         <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} isAuthenticated={isAuthenticated} />} />
         <Route path="/user/:id_number" element={<DocInfo />} />
         <Route path="*" element={<NoPage />} />
