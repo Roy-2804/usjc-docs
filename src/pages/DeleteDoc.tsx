@@ -1,6 +1,7 @@
 import { deleteDoc } from "../services/docsService";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/header/header";
+import { toast } from "react-toastify";
 
 const DeleteDoc = () => {
   const { id_number } = useParams();
@@ -14,8 +15,10 @@ const DeleteDoc = () => {
     if (id_number) {
       try {
         await deleteDoc(id_number);
+        toast.success("Expediente eliminado correctamente");
         navigate("/home");
       } catch (error) {
+        toast.error("Error al eliminar expediente");
         console.error("Error al eliminar documento:", error);
       }
     }

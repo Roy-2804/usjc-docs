@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { newDoc, updateDoc, getDoc } from "../services/docsService";
 import { FormData, Errors } from "../interface";
 import Header from "../components/header/header";
+import { toast } from "react-toastify";
 
 const createCheckboxGroup = (
   title: string,
@@ -114,6 +115,7 @@ const DocumentForm = () => {
         ...data,
       });
     } catch (error) {
+      toast.error("Error al obtener expediente");
       console.error("Error al obtener expediente:", error);
     } finally {
       setLoading(false);
@@ -165,11 +167,14 @@ const DocumentForm = () => {
       setLoading(true);
       if (id_number) {
         await updateDoc(id_number, formData);
+        toast.success("El expediente se editó correctamente");
       } else {
         await newDoc(formData);
+        toast.success("El expediente se guardó correctamente");
       }
       navigate("/home");
     } catch (error) {
+      toast.error("Error al guardar expediente");
       console.error("Error al guardar expediente:", error);
     } finally {
       setLoading(false);

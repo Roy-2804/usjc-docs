@@ -111,8 +111,8 @@ const UserList = () => {
             {users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <a href={`/user/${user.id}`} className="text-blue-600 hover:underline">{ user.name }</a>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        { user.name }
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.role}</td>

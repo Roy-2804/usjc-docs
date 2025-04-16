@@ -15,6 +15,10 @@ import './App.css'
 import { JwtPayload } from "./interface";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import RequireAdmin from "./components/requireAdmin/requireAdmin";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,18 +58,47 @@ function App() {
       <Routes>
         <Route path="/home" element={<Homepage />} />
         <Route path="/add" element={<DocumentForm />} />
-        <Route path="/users" element={<Users />} />
+        <Route
+          path="/users"
+          element={
+            <RequireAdmin>
+              <Users />
+            </RequireAdmin>
+          }
+        />
         <Route path="/doc/node/:id_number" element={<DocInfo />} />
         <Route path="/doc/node/:id_number/edit" element={<DocumentForm />} />
-        <Route path="/doc/node/:id_number/delete" element={<DeleteDoc />} />
+        <Route
+          path="/doc/node/:id_number/delete"
+          element={
+            <RequireAdmin>
+              <DeleteDoc />
+            </RequireAdmin>
+          }
+        />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/add/user" element={<UserForm />} />
+        <Route
+          path="/add/user"
+          element={
+            <RequireAdmin>
+              <UserForm />
+            </RequireAdmin>
+          }
+        />
         <Route path="/user/:id_number/edit" element={<UserForm />} />
-        <Route path="/user/:id_number/delete" element={<DeleteUser />} />
+        <Route
+          path="/user/:id_number/delete"
+          element={
+            <RequireAdmin>
+              <DeleteUser />
+            </RequireAdmin>
+          }
+        />
         <Route path="/" element={<Login onLogin={() => setIsAuthenticated(true)} isAuthenticated={isAuthenticated} />} />
         <Route path="/user/:id_number" element={<DocInfo />} />
         <Route path="*" element={<NoPage />} />
       </Routes>
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 }

@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { login } from "../services/authService";
 import logo from '/logo.png';
 import { useNavigate } from "react-router-dom";
-
-
+import { toast } from "react-toastify";
 
 const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthenticated: boolean }) => {
   const [email, setEmail] = useState("");
@@ -21,8 +20,10 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
     try {
       await login(email, password);
       onLogin();
+      toast.success("Bienvenido");
       navigate("/home");
     } catch (error) {
+      toast.success("Error al iniciar sesión. Asegúrate de añadir las credenciales correctamente");
       console.log("Error al iniciar sesión", error);
     }
   };

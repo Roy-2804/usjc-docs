@@ -1,4 +1,8 @@
+import { toast } from "react-toastify";
+
 const NoPage = () => {
+  toast.info("La página que accedes no existe");
+
     return (
       <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="pt-8">

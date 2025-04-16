@@ -1,6 +1,7 @@
 import { deleteUser } from "../services/userService";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/header/header";
+import { toast } from "react-toastify";
 
 const DeleteUser = () => {
   const { id_number } = useParams();
@@ -14,8 +15,10 @@ const DeleteUser = () => {
     if (id_number) {
       try {
         await deleteUser(id_number);
+        toast.success("Usuario eliminado correctamente");
         navigate("/users");
       } catch (error) {
+        toast.error("Error al eliminar usuario");
         console.error("Error al eliminar usuario:", error);
       }
     }

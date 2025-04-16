@@ -5,6 +5,7 @@ import { UserProfile, UserErrors } from "../interface";
 import Header from "../components/header/header";
 import { getUser, newUser, updateUser } from "../services/userService";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const UserForm = () => {
   const { id_number } = useParams();
@@ -34,6 +35,7 @@ const UserForm = () => {
       });
     } catch (error) {
       console.error("Error al obtener usuario:", error);
+      toast.error("Error al guardar el usuario");
     } finally {
       setLoading(false);
     }
@@ -68,12 +70,15 @@ const UserForm = () => {
       setLoading(true);
       if (id_number) {
         await updateUser(id_number, formData);
+        toast.success("Usuario actualizado correctamente");
       } else {
         await newUser(formData);
+        toast.success("Usuario añadido correctamente");
       }
       navigate("/users");
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
+      toast.error("Error al guardar el usuario");
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         setUserExists(true)
       }
