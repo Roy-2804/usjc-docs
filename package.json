@@ -2,13 +2,13 @@
   "name": "usjc-docs",
   "private": true,
   "version": "0.0.0",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
