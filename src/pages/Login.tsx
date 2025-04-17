@@ -23,7 +23,7 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
       toast.success("Bienvenido");
       navigate("/home");
     } catch (error) {
-      toast.success("Error al iniciar sesión. Asegúrate de añadir las credenciales correctamente");
+      toast.warning("Error al iniciar sesión. Asegúrate de añadir las credenciales correctamente");
       console.log("Error al iniciar sesión", error);
     }
   };
