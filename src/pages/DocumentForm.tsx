@@ -194,13 +194,13 @@ const DocumentForm = () => {
         <form className="space-y-4 bg-white p-6 rounded-lg" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="studentName" className="block text-sm font-medium text-gray-700">Nombre del estudiante</label>
-            <input placeholder="Ingrese el nombre" id="studentName" name="studentName" type="text" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentName} />
+            <input placeholder="Ingrese el nombre" id="studentName" name="studentName" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentName} />
             {errors.studentName && <p className="text-red-500 text-sm">{errors.studentName}</p>}
           </div>
 
           <div>
             <label htmlFor="idNumber" className="block text-sm font-medium text-gray-700">Número de identificación</label>
-            <input placeholder="Ingrese la identificación" id="idNumber" name="idNumber" type="number" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idNumber}/>
+            <input placeholder="Ingrese la identificación" id="idNumber" name="idNumber" type="number" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idNumber}/>
             {errors.idNumber && <p className="text-red-500 text-sm">{errors.idNumber}</p>}
           </div>
 
@@ -284,7 +284,7 @@ const DocumentForm = () => {
               ) : null}
               <div>
                 <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
-                <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications} />
+                <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications} />
               </div>
             </>
           )}
@@ -318,14 +318,14 @@ const DocumentForm = () => {
               name="studentRegistration"
               onChange={handleChange}
               value={formData.studentRegistration}
-              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
+              className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
             />
             {errors.studentRegistration && <p className="text-red-500 text-sm">{errors.studentRegistration}</p>}
           </div>
 
           <div>
             <label htmlFor="link" className="block text-sm font-medium text-gray-700">Link de los archivos</label>
-            <input placeholder="Ingrese el link" id="link" name="link" type="text" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.link} />
+            <input placeholder="Ingrese el link" id="link" name="link" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.link} />
           </div>
 
           {checkboxGroups.map((group) => (

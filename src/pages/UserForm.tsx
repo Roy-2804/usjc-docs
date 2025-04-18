@@ -104,7 +104,7 @@ const UserForm = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 text-black"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Nombre"
@@ -120,7 +120,7 @@ const UserForm = () => {
                 type="text"
                 id="email"
                 name="email"
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 text-black"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="ejemplo@gmail.com"
@@ -136,7 +136,7 @@ const UserForm = () => {
                 type="password"
                 id="pass"
                 name="pass"
-                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2"
+                className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 text-black"
                 value={formData.pass}
                 onChange={handleChange}
                 placeholder="Contraseña"

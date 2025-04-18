@@ -74,12 +74,12 @@ function Homepage() {
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="studentName" className="text-sm font-medium text-gray-700">Nombre</label>
-          <input id="studentName" name="studentName" type="text" className="border p-2 rounded-lg" value={formData.studentName} onChange={handleChange}/>
+          <input id="studentName" name="studentName" type="text" className="border p-2 rounded-lg text-black" value={formData.studentName} onChange={handleChange}/>
         </div>
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="idNumber" className="text-sm font-medium text-gray-700">Número de identificación</label>
-          <input id="idNumber" name="idNumber" type="number" className="border p-2 rounded-lg" value={formData.idNumber} onChange={handleChange}/>
+          <input id="idNumber" name="idNumber" type="number" className="border p-2 rounded-lg text-black" value={formData.idNumber} onChange={handleChange}/>
         </div>
 
         <div className="flex flex-col w-full md:w-[48%]">
