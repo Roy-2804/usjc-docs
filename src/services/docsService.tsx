@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FormData, FilterData } from "../interface";
-const API_URL = "http://localhost:3001/api/docs";
+const API_URL = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
 export const newDoc = async (data: FormData) => {
