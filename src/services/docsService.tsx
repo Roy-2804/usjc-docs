@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
 export const newDoc = async (data: FormData) => {
-  const docData =  await axios.post(`${API_URL}/new-doc`, { data }, {
+  const docData =  await axios.post(`${API_URL}/api/docs/new-doc`, { data }, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -13,7 +13,7 @@ export const newDoc = async (data: FormData) => {
 };
 
 export const getDocs = async (data: FilterData = {}) => {
-  const docData = await axios.get(`${API_URL}/`, {
+  const docData = await axios.get(`${API_URL}/api/docs/`, {
     params: data,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ export const getDocs = async (data: FilterData = {}) => {
 };
 
 export const getDoc = async (id: string = ""): Promise<FormData[][]> => {
-  const response = await axios.get<FormData[][]>(`${API_URL}/node/${id}`, {
+  const response = await axios.get<FormData[][]>(`${API_URL}/api/docs/node/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -32,7 +32,7 @@ export const getDoc = async (id: string = ""): Promise<FormData[][]> => {
 };
 
 export const updateDoc = async (id: string = "", data: FormData) => {
-  const res =  await axios.put(`${API_URL}/update/node/${id}`, { data }, {
+  const res =  await axios.put(`${API_URL}/api/docs/update/node/${id}`, { data }, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -42,7 +42,7 @@ export const updateDoc = async (id: string = "", data: FormData) => {
 
 export const deleteDoc = async (id: string) => {
   const token = localStorage.getItem("token");
-  const res = await axios.delete(`${API_URL}/delete/node/${id}`, {
+  const res = await axios.delete(`${API_URL}/api/docs/delete/node/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

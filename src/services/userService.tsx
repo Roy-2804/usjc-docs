@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
 export const newUser = async (data: UserProfile) => {
-  const userData =  await axios.post(`${API_URL}/new-user`, { data }, {
+  const userData =  await axios.post(`${API_URL}/api/users/new-user`, { data }, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -13,7 +13,7 @@ export const newUser = async (data: UserProfile) => {
 };
 
 export const getUsers = async (data: UserProfile = {}) => {
-  const docData = await axios.get(`${API_URL}/`, {
+  const docData = await axios.get(`${API_URL}/api/users/`, {
     params: data,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ export const getUsers = async (data: UserProfile = {}) => {
 };
 
 export const getUser = async (id: string = ""): Promise<UserProfile[][]> => {
-  const response = await axios.get<UserProfile[][]>(`${API_URL}/user/${id}`, {
+  const response = await axios.get<UserProfile[][]>(`${API_URL}/api/users/user/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -32,7 +32,7 @@ export const getUser = async (id: string = ""): Promise<UserProfile[][]> => {
 };
 
 export const updateUser = async (id: string = "", data: UserProfile) => {
-  const res =  await axios.put(`${API_URL}/update/user/${id}`, { data }, {
+  const res =  await axios.put(`${API_URL}/api/users/update/user/${id}`, { data }, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -42,7 +42,7 @@ export const updateUser = async (id: string = "", data: UserProfile) => {
 
 export const deleteUser = async (id: string) => {
   const token = localStorage.getItem("token");
-  const res = await axios.delete(`${API_URL}/delete/user/${id}`, {
+  const res = await axios.delete(`${API_URL}/api/users/delete/user/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
