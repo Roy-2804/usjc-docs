@@ -33,6 +33,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.json({ token, user: { id: user.id, email: user.email, role: user.role, created_at: user.created_at, name: user.name } });
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 }));

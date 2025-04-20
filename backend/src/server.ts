@@ -7,7 +7,6 @@ import usersRoutes from "./routes/users";
 
 const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env.development";
 dotenv.config({ path: envFile });
-
 const app = express();
 
 app.use(cors());

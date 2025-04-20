@@ -18,8 +18,10 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      const data = await login(email, password);
       onLogin();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       toast.success("Bienvenido");
       navigate("/home");
     } catch (error) {

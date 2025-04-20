@@ -8,7 +8,7 @@ const router = Router();
 
 // Login
 router.post("/login", async (req: Request, res: Response): Promise<any> => {
-  const { email, password } = req.body;
+  const { email, password } = req.body;  
   
   try {
     const [rows]: any = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
@@ -22,6 +22,7 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
 
     res.json({ token, user: { id: user.id, email: user.email, role: user.role, created_at: user.created_at, name: user.name } });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });

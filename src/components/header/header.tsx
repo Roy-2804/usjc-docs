@@ -20,7 +20,6 @@ function Header() {
   const role = getUserRole();
 
   const filteredNavigation = navigation.filter((item, index) => {
-    console.log(item);
     if (index === 2 && role !== 'admin') return false;
     return true;
   });
