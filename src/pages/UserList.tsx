@@ -71,17 +71,17 @@ const UserList = () => {
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">Nombre</label>
-          <input name="name" id="name" type="text" className="border p-2 rounded-lg" onChange={handleChange} value={formData.name}/>
+          <input name="name" id="name" type="text" className="border p-2 rounded-lg shadow-sm bg-white text-black" onChange={handleChange} value={formData.name}/>
         </div>
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="email" className="text-sm font-medium text-gray-700">Correo electrónico</label>
-          <input name="email" id="email" type="text" className="border p-2 rounded-lg" onChange={handleChange} value={formData.email}/>
+          <input name="email" id="email" type="text" className="border p-2 rounded-lg shadow-sm bg-white text-black" onChange={handleChange} value={formData.email}/>
         </div>
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="role" className="text-sm font-medium text-gray-700">Rol</label>
-          <select name="role" id="role" className="border p-2 rounded-lg" onChange={handleChange} value={formData.role}>
+          <select name="role" id="role" className="border p-2 rounded-lg shadow-sm bg-white text-black" onChange={handleChange} value={formData.role}>
             <option value="">Seleccionar</option>
             <option value="Admin">Admin</option>
             <option value="Editor">Editor</option>
@@ -116,7 +116,10 @@ const UserList = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.role}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.created_at}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.created_at 
+                        ? ` ${new Date(user.created_at).toLocaleDateString()}`
+                        : " no disponible"}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline flex gap-4 justify-center">
                         <a href={`/user/${user.id}/edit`} className="text-blue-600 hover:underline w-[20px] h-[20px] block">
                             <img src={editLogo} alt="Edit icon" />

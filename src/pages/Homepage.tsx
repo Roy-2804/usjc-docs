@@ -74,17 +74,17 @@ function Homepage() {
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="studentName" className="text-sm font-medium text-gray-700">Nombre</label>
-          <input id="studentName" name="studentName" type="text" className="border p-2 rounded-lg text-black" value={formData.studentName} onChange={handleChange}/>
+          <input id="studentName" name="studentName" type="text" className="border p-2 rounded-lg text-black shadow-sm bg-white text-black" value={formData.studentName} onChange={handleChange}/>
         </div>
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="idNumber" className="text-sm font-medium text-gray-700">Número de identificación</label>
-          <input id="idNumber" name="idNumber" type="number" className="border p-2 rounded-lg text-black" value={formData.idNumber} onChange={handleChange}/>
+          <input id="idNumber" name="idNumber" type="number" className="border p-2 rounded-lg text-black shadow-sm bg-white text-black" value={formData.idNumber} onChange={handleChange}/>
         </div>
 
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="gender" className="text-sm font-medium text-gray-700">Género</label>
-          <select id="gender" name="gender" className="border p-2 rounded-lg" value={formData.gender} onChange={handleChange}>
+          <select id="gender" name="gender" className="border p-2 rounded-lg shadow-sm bg-white text-black" value={formData.gender} onChange={handleChange}>
             <option value="">Seleccionar</option>
             <option value="Hombre">Hombre</option>
             <option value="Mujer">Mujer</option>
@@ -93,7 +93,7 @@ function Homepage() {
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="grade" className="text-sm font-medium text-gray-700">Grado</label>
-          <select id="grade" name="grade" className="border p-2 rounded-lg" value={formData.grade} onChange={handleChange}>
+          <select id="grade" name="grade" className="border p-2 rounded-lg shadow-sm bg-white text-black" value={formData.grade} onChange={handleChange}>
             <option value="">Seleccionar</option>
             <option value="Bachillerato">Bachillerato</option>
             <option value="Licenciatura">Licenciatura</option>
@@ -103,7 +103,7 @@ function Homepage() {
 
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="career" className="text-sm font-medium text-gray-700">Carrera</label>
-          <select id="career" name="career" className="border p-2 rounded-lg" value={formData.career} onChange={handleChange}>
+          <select id="career" name="career" className="border p-2 rounded-lg shadow-sm bg-white text-black" value={formData.career} onChange={handleChange}>
           <option value="">Seleccionar</option>
             <option value="Administración de Empresas">Administración de Empresas</option>
             <option value="Administración de Empresas con Énfasis en Gestión y Servicios de la Información">Administración de Empresas con Énfasis en Gestión y Servicios de la Información</option>
@@ -118,7 +118,7 @@ function Homepage() {
         
         <div className="flex flex-col w-full md:w-[48%]">
           <label htmlFor="studentState" className="text-sm font-medium text-gray-700">Estado</label>
-          <select id="studentState" name="studentState" className="border p-2 rounded-lg" value={formData.studentState} onChange={handleChange}>
+          <select id="studentState" name="studentState" className="border p-2 rounded-lg shadow-sm bg-white text-black" value={formData.studentState} onChange={handleChange}>
             <option value="">Seleccionar</option>
             <option value="Activo">Activo</option>
             <option value="Graduado">Graduado</option>

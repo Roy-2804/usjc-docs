@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthenticated: boolean }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,21 +18,29 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true)
     try {
       const data = await login(email, password);
       onLogin();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      setLoading(false)
       toast.success("Bienvenido");
       navigate("/home");
     } catch (error) {
       toast.warning("Error al iniciar sesión. Asegúrate de añadir las credenciales correctamente");
       console.log("Error al iniciar sesión", error);
+      setLoading(false)
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
+      {loading && 
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-lg">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-white"></div>
+      </div>
+      }
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
         <img src={logo} alt="USJC Logo" />
         <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Iniciar sesión</h2>
@@ -43,7 +52,7 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black shadow-sm bg-white text-black"
               placeholder="ejemplo@usanjuandelacruz.ac.cr"
               required
             />
@@ -56,7 +65,7 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black shadow-sm bg-white text-black"
               placeholder="********"
               required
             />

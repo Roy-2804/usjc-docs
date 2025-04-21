@@ -5,7 +5,8 @@ import {
   Text,
   View,
   StyleSheet,
-  Image
+  Image,
+  Link
 } from '@react-pdf/renderer';
 import {FormData} from "../../interface"
 
@@ -109,6 +110,11 @@ const styles = StyleSheet.create({
 interface Props {
     student: FormData;
 }
+
+const getValidLink = (url: string) => {
+  if (!url) return '';
+  return url.startsWith('http') ? url : `https://${url}`;
+};
 
 const StudentPDF: React.FC<Props> = ({ student }) => (
   <Document>
@@ -266,6 +272,7 @@ const StudentPDF: React.FC<Props> = ({ student }) => (
           <Text style={styles.checkboxLabel}>Copia de títulos obtenidos</Text>
           <Text style={ student.documentacionAdicional.includes("Copia de títulos obtenidos") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
         </View>
+        <Link src={getValidLink(student.link)} style={styles.full}>Link proporcionado a los títulos</Link>
       </View>
     </Page>
   </Document>

@@ -151,20 +151,20 @@ function EditDocument() {
         <div>
           <label htmlFor="studentName" className="block text-sm font-medium text-gray-700">Nombre del estudiante</label>
           <input placeholder="Ingrese el nombre" id="studentName" name="studentName" type="text"
-          className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentName} />
+          className="mt-1 block w-full border-gray-300 rounded-lg p-2 shadow-sm bg-white text-black" onChange={handleChange} value={formData.studentName} />
           {errors.studentName && <p className="text-red-500 text-sm">{errors.studentName}</p>}
         </div>
 
         <div>
           <label htmlFor="idNumber" className="block text-sm font-medium text-gray-700">Número de identificación</label>
           <input placeholder="Ingrese la identificación" id="idNumber" name="idNumber" type="number"
-          className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idNumber}/>
+          className="mt-1 block w-full border-gray-300 rounded-lg p-2 shadow-sm bg-white text-black" onChange={handleChange} value={formData.idNumber}/>
           {errors.idNumber && <p className="text-red-500 text-sm">{errors.idNumber}</p>}
         </div>
 
         <div>
           <label htmlFor="idType" className="block text-sm font-medium text-gray-700">Tipo de identificación</label>
-          <select id="idType" name="idType" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idType}>
+          <select id="idType" name="idType" className="mt-1 block w-full border-gray-300 rounded-lg p-2 shadow-sm bg-white text-black" onChange={handleChange} value={formData.idType}>
             <option value="">Seleccionar</option>
             <option value="Cédula de identidad">Cédula de identidad</option>
             <option value="Pasaporte">Pasaporte</option>
@@ -176,7 +176,7 @@ function EditDocument() {
 
         <div>
           <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Grado</label>
-          <select id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.grade}>
+          <select id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg p-2 shadow-sm bg-white text-black" onChange={handleChange} value={formData.grade}>
             <option value="">Seleccionar</option>
             <option value="Bachillerato">Bachillerato</option>
             <option value="Licenciatura">Licenciatura</option>
@@ -187,7 +187,7 @@ function EditDocument() {
 
         <div>
           <label htmlFor="career" className="block text-sm font-medium text-gray-700">Carrera</label>
-          <select id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.career}>
+          <select id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg p-2 shadow-sm bg-white text-black" onChange={handleChange} value={formData.career}>
             <option value="">Seleccionar</option>
             <option value="ae">Administración de Empresas</option>
             <option value="aegsi">Administración de Empresas con Énfasis en Gestión y Servicios de la Información</option>
@@ -232,7 +232,7 @@ function EditDocument() {
 
         <div>
           <label htmlFor="modalidadGraduacion" className="block text-sm font-medium text-gray-700">Modalidad de graduación</label>
-          <select id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
+          <select id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg p-2 shadow-sm bg-white text-black"
           onChange={handleChange} value={formData.modalidadGraduacion}>
             <option value="">Seleccionar</option>
             <option value="Tesina">Tesina</option>
@@ -256,7 +256,7 @@ function EditDocument() {
 
         <div>
           <label htmlFor="studentCondition" className="block text-sm font-medium text-gray-700">Condición del estudiante</label>
-          <select id="studentCondition" name="studentCondition" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
+          <select id="studentCondition" name="studentCondition" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm bg-white text-black"
            onChange={handleChange} value={formData.studentCondition}>
             <option value="">Seleccionar</option>
             <option value="Moroso">Moroso</option>
@@ -267,7 +267,7 @@ function EditDocument() {
 
         <div>
           <label htmlFor="studentState" className="block text-sm font-medium text-gray-700">¿Estudiante activo o inactivo?</label>
-          <select id="studentState" name="studentState" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
+          <select id="studentState" name="studentState" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm bg-white text-black"
            onChange={handleChange} value={formData.studentState}>
             <option value="">Seleccionar</option>
             <option value="Activo">Activo</option>
