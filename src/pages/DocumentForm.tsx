@@ -206,7 +206,7 @@ const DocumentForm = () => {
 
           <div>
             <label htmlFor="idType" className="block text-sm font-medium text-gray-700">Tipo de identificación</label>
-            <select id="idType" name="idType" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.idType}>
+            <select id="idType" name="idType" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.idType}>
               <option value="">Seleccionar</option>
               <option value="Cédula de identidad">Cédula de identidad</option>
               <option value="Pasaporte">Pasaporte</option>
@@ -218,7 +218,7 @@ const DocumentForm = () => {
 
           <div>
             <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Sexo</label>
-            <select id="gender" name="gender" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.gender}>
+            <select id="gender" name="gender" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.gender}>
               <option value="">Seleccionar</option>
               <option value="Hombre">Hombre</option>
               <option value="Mujer">Mujer</option>
@@ -228,7 +228,7 @@ const DocumentForm = () => {
 
           <div>
           <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Grado</label>
-          <select id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.grade}>
+          <select id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.grade}>
             <option value="">Seleccionar</option>
             <option value="Bachillerato">Bachillerato</option>
             <option value="Licenciatura">Licenciatura</option>
@@ -239,7 +239,7 @@ const DocumentForm = () => {
 
           <div>
             <label htmlFor="career" className="block text-sm font-medium text-gray-700">Carrera</label>
-            <select id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.career}>
+            <select id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.career}>
               <option value="">Seleccionar</option>
               <option value="Administración de Empresas">Administración de Empresas</option>
               <option value="Administración de Empresas con Énfasis en Gestión y Servicios de la Información">Administración de Empresas con Énfasis en Gestión y Servicios de la Información</option>
@@ -255,7 +255,7 @@ const DocumentForm = () => {
 
           <div>
             <label htmlFor="modalidadGraduacion" className="block text-sm font-medium text-gray-700">Modalidad de graduación</label>
-            <select id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.modalidadGraduacion}>
+            <select id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.modalidadGraduacion}>
               <option value="">Seleccionar</option>
               <option value="Tesina">Tesina</option>
               <option value="Tesis">Tesis</option>
@@ -291,7 +291,7 @@ const DocumentForm = () => {
 
           <div>
             <label htmlFor="studentCondition" className="block text-sm font-medium text-gray-700">Condición del estudiante</label>
-            <select id="studentCondition" name="studentCondition" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentCondition}>
+            <select id="studentCondition" name="studentCondition" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.studentCondition}>
               <option value="">Seleccionar</option>
               <option value="Moroso">Moroso</option>
               <option value="Al día">Al día</option>
@@ -301,7 +301,7 @@ const DocumentForm = () => {
 
           <div>
             <label htmlFor="studentState" className="block text-sm font-medium text-gray-700">¿Estudiante activo o inactivo?</label>
-            <select id="studentState" name="studentState" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.studentState}>
+            <select id="studentState" name="studentState" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.studentState}>
               <option value="">Seleccionar</option>
               <option value="Activo">Activo</option>
               <option value="Graduado">Graduado</option>
