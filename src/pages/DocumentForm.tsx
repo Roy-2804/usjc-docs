@@ -52,27 +52,27 @@ const checkboxGroups = [
     {
       title: "Convalidaciones",
       name: "convalidaciones",
-      options: ["Pre estudio de convalidación", "Resolución de convalidación de estudios"]
+      options: ["Pre estudio de convalidación", "Resolución de convalidación de estudios", "No registra / no posee"]
     },
     {
       title: "Boletas de matrícula",
       name: "boletasMatricula",
-      options: ["Presentada"]
+      options: ["Presentada", "No registra"]
     },
     {
       title: "Trabajo comunal universitario TCU",
       name: "tcu",
-      options: ["Carta de aprobación – solicitud", "Oficio de aprobación de la universidad", "Oficio de aprobación de la institución u organización", "Bitácora", "Informe final del estudiante", "Oficio de cierre de la universidad"]
+      options: ["Carta de aprobación – solicitud", "Oficio de aprobación de la universidad", "Oficio de aprobación de la institución u organización", "Bitácora", "Informe final del estudiante", "Oficio de cierre de la universidad", "No registra"]
     },
     {
       title: "Historial académico",
       name: "historialAcademico",
-      options: ["Historial académico de egreso"]
+      options: ["Historial académico de egreso", "Sin referencia"]
     },
     {
       title: "Documentación adicional",
       name: "documentacionAdicional",
-      options: ["Copia de títulos obtenidos", "Otros"]
+      options: ["Copia de títulos obtenidos", "Otros", "No posee"]
     }
 ];
 
@@ -135,7 +135,6 @@ const DocumentForm = () => {
     if (!formData.career) newErrors.career = "Debe seleccionar una carrera.";
     if (!formData.studentCondition) newErrors.studentCondition = "Debe indicar la condición del estudiante.";
     if (!formData.studentState) newErrors.studentState = "Debe indicar si el estudiante está activo o inactivo.";
-    if (!formData.studentRegistration) newErrors.studentRegistration = "Debe indicar la última fecha de matrícula.";
     return newErrors;
   };
 
@@ -233,6 +232,7 @@ const DocumentForm = () => {
             <option value="Bachillerato">Bachillerato</option>
             <option value="Licenciatura">Licenciatura</option>
             <option value="Maestría">Maestría</option>
+            <option value="Sin registro">Sin registro</option>
           </select>
           {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
           </div>
@@ -260,6 +260,7 @@ const DocumentForm = () => {
               <option value="Tesina">Tesina</option>
               <option value="Tesis">Tesis</option>
               <option value="Pruebas de grado">Pruebas de grado</option>
+              <option value="Sin registro">Sin registro</option>
             </select>
           </div>
 
@@ -282,10 +283,14 @@ const DocumentForm = () => {
                   ], formData, setFormData)}
                 </>
               ) : null}
-              <div>
-                <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
-                <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications} />
-              </div>
+              {formData.modalidadGraduacion != 'Sin registro' ? (
+                <>
+                  <div>
+                    <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
+                    <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications} />
+                  </div>
+                </>
+              ) : null}
             </>
           )}
 
@@ -295,6 +300,7 @@ const DocumentForm = () => {
               <option value="">Seleccionar</option>
               <option value="Moroso">Moroso</option>
               <option value="Al día">Al día</option>
+              <option value="Becado">Becado</option>
             </select>
             {errors.studentCondition && <p className="text-red-500 text-sm">{errors.studentCondition}</p>}
           </div>
@@ -320,7 +326,6 @@ const DocumentForm = () => {
               value={formData.studentRegistration}
               className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
             />
-            {errors.studentRegistration && <p className="text-red-500 text-sm">{errors.studentRegistration}</p>}
           </div>
 
           <div>

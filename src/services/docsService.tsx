@@ -2,6 +2,7 @@ import axios from "axios";
 import { FormData, FilterData } from "../interface";
 const API_URL = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
+import qrcode from 'qrcode';
 
 export const newDoc = async (data: FormData) => {
   const docData =  await axios.post(`${API_URL}/api/docs/new-doc`, { data }, {
@@ -48,4 +49,14 @@ export const deleteDoc = async (id: string) => {
     },
   });
   return res.data;
+};
+
+export const generateQrBase64 = async (link: string): Promise<string> => {
+  try {
+    const qrDataUrl = await qrcode.toDataURL(link);
+    return qrDataUrl;
+  } catch (err) {
+    console.error("Error generating QR:", err);
+    return '';
+  }
 };

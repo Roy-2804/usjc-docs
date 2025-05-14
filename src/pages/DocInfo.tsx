@@ -17,7 +17,6 @@ const DocInfo = () => {
     try {
       const res: FormData[][] = await getDoc(id_number);
       setExpediente(res[0][0]);
-      console.log(res)
     } catch (err) {
       console.error("Error al obtener expediente:", err);
     } finally {
