@@ -73,6 +73,11 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 0,
   },
+  fullText: {
+    flexBasis: '100%',
+    flexGrow: 0,
+    flexShrink: 0,
+  },
   full: {
     width: '100%',
     textAlign: 'center',
@@ -183,17 +188,19 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           </View>
           <View style={styles.row}>
             <Text style={[styles.cell, styles.wide]}>
-              <Text style={styles.label}>Grado:</Text> {student.grade}
+              <Text style={styles.label}>Cantidad de carreras:</Text> {student.subjectCount}
             </Text>
             <Text style={[styles.cell, styles.wide]}>
               <Text style={styles.label}>Última Matrícula:</Text> {student.studentRegistration ? student.studentRegistration : "Sin registro"}
             </Text>
           </View>
-          <View style={styles.row}>
-            <Text style={[styles.cell, styles.wide, { flexBasis: '100%' }]}>
-              <Text style={styles.label}>Carrera que cursa:</Text> {student.career}
-            </Text>
+          <Text style={styles.full}>Carreras</Text>
+          {Array.from({ length: parseInt(student.subjectCount) || 0 }).map((_, idx) => (
+            <View key={idx}>
+              <Text style={[styles.label]}>Carrera: {student.career[idx] || "(Sin carrera)"} {"\n"}</Text>
+              <Text style={[styles.label]}>Grado: {student.grade[idx]}</Text>
           </View>
+          ))}
           <Text style={styles.subtitle}>DOCUMENTACIÓN</Text>
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Copia del documento de identificación</Text>

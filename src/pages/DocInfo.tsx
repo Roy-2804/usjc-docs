@@ -16,7 +16,18 @@ const DocInfo = () => {
   const fetchExpedientes = async (id_number: string) => {
     try {
       const res: FormData[][] = await getDoc(id_number);
-      setExpediente(res[0][0]);
+      const raw = res[0][0];
+
+      const parsedExpediente = {
+        ...raw,
+        career: Array.isArray(raw.career)
+          ? raw.career
+          : JSON.parse(raw.career || "[]"),
+        grade: Array.isArray(raw.grade)
+          ? raw.grade
+          : JSON.parse(raw.grade || "[]"),
+      };
+      setExpediente(parsedExpediente);
     } catch (err) {
       console.error("Error al obtener expediente:", err);
     } finally {

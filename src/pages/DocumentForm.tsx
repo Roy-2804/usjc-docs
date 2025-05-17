@@ -86,8 +86,8 @@ const DocumentForm = () => {
     idNumber: "",
     idType: "",
     gender: "",
-    grade: "",
-    career: "",
+    grade: [""],
+    career: [""],
     modalidadGraduacion: "",
     documentosAdjuntos: [],
     convalidaciones: [],
@@ -101,6 +101,7 @@ const DocumentForm = () => {
     studentState: "",
     studentRegistration: "",
     link: "",
+    subjectCount: "",
   });
   const [errors, setErrors] = useState<Errors>({});
 
@@ -110,9 +111,18 @@ const DocumentForm = () => {
     try {
       const res = await getDoc(id_number);
       const data = res[0][0];
+      const parsedExpediente = {
+        ...data,
+        career: Array.isArray(data.career)
+          ? data.career
+          : JSON.parse(data.career || "[]"),
+        grade: Array.isArray(data.grade)
+          ? data.grade
+          : JSON.parse(data.grade || "[]"),
+      };
       setFormData({
         ...formData,
-        ...data,
+        ...parsedExpediente,
       });
     } catch (error) {
       toast.error("Error al obtener expediente");
@@ -135,20 +145,33 @@ const DocumentForm = () => {
     if (!formData.career) newErrors.career = "Debe seleccionar una carrera.";
     if (!formData.studentCondition) newErrors.studentCondition = "Debe indicar la condición del estudiante.";
     if (!formData.studentState) newErrors.studentState = "Debe indicar si el estudiante está activo o inactivo.";
+    if (!formData.subjectCount) newErrors.subjectCount = "Debe indicar la cantidad de carreras.";
     return newErrors;
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, id } = e.target;
+    const index = e.target.getAttribute("data-index");
 
     const updatedForm = {
       ...formData,
       [name]: value,
     };
 
+    if ((name === "grade" || name === "career") && index !== null) {
+      const i = parseInt(index);
+      const updatedArray = [...(formData[name] || [])];
+      updatedArray[i] = value;
+      updatedForm[name] = updatedArray;
+    }
+
     if (id === "modalidadGraduacion" ) {
       updatedForm.qualifications = [];
       updatedForm.actasCalificacion = [];
+    }
+  
+    if (id === "subjectCount" && parseInt(value) > 4 ) {
+      updatedForm.subjectCount = "4";
     }
 
     setFormData(updatedForm);
@@ -222,36 +245,47 @@ const DocumentForm = () => {
               <option value="Hombre">Hombre</option>
               <option value="Mujer">Mujer</option>
             </select>
-            {errors.idType && <p className="text-red-500 text-sm">{errors.gender}</p>}
+            {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}
           </div>
 
           <div>
-          <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Grado</label>
-          <select id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.grade}>
-            <option value="">Seleccionar</option>
-            <option value="Bachillerato">Bachillerato</option>
-            <option value="Licenciatura">Licenciatura</option>
-            <option value="Maestría">Maestría</option>
-            <option value="Sin registro">Sin registro</option>
-          </select>
-          {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
+            <label htmlFor="subjectCount" className="block text-sm font-medium text-gray-700">Cantidad de carreras</label>
+            <input type="string" id="subjectCount" name="subjectCount" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.subjectCount}></input>
+            {errors.subjectCount && <p className="text-red-500 text-sm">{errors.subjectCount}</p>}
           </div>
 
-          <div>
-            <label htmlFor="career" className="block text-sm font-medium text-gray-700">Carrera</label>
-            <select id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.career}>
-              <option value="">Seleccionar</option>
-              <option value="Administración de Empresas">Administración de Empresas</option>
-              <option value="Administración de Empresas con Énfasis en Gestión y Servicios de la Información">Administración de Empresas con Énfasis en Gestión y Servicios de la Información</option>
-              <option value="Administración de Empresas con Énfasis en Mercadeo y Ventas">Administración de Empresas con Énfasis en Mercadeo y Ventas</option>
-              <option value="Administración de Empresas con Énfasis en Recursos Humanos">Administración de Empresas con Énfasis en Recursos Humanos</option>
-              <option value="Administración de Empresas con Énfasis en Relaciones Laborales">Administración de Empresas con Énfasis en Relaciones Laborales</option>
-              <option value="Administración de Empresas con Énfasis en Transporte y Seguridad Vial">Administración de Empresas con Énfasis en Transporte y Seguridad Vial</option>
-              <option value="Contaduría Pública">Contaduría Pública</option>
-              <option value="Derecho">Derecho</option>
-            </select>
-            {errors.career && <p className="text-red-500 text-sm">{errors.career}</p>}
-          </div>
+          {Array.from({ length: parseInt(formData.subjectCount) || 0 }).map((_, idx) => (
+            <div className="border border-[#002E60] p-2 rounded-lg" key={idx}>
+              <p className="text-[#002E60] font-bold underline text-sm mb-2">Carrera #{idx + 1}</p>
+              <div>
+                <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Grado</label>
+                <select data-index={idx} id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.grade[idx] ?? ""}>
+                  <option value="">Seleccionar</option>
+                  <option value="Bachillerato">Bachillerato</option>
+                  <option value="Licenciatura">Licenciatura</option>
+                  <option value="Maestría">Maestría</option>
+                  <option value="Sin registro">Sin registro</option>
+                </select>
+                {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="career" className="block text-sm font-medium text-gray-700">Carrera</label>
+                <select data-index={idx} id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.career[idx] ?? ""}>
+                  <option value="">Seleccionar</option>
+                  <option value="Administración de Empresas">Administración de Empresas</option>
+                  <option value="Administración de Empresas con Énfasis en Gestión y Servicios de la Información">Administración de Empresas con Énfasis en Gestión y Servicios de la Información</option>
+                  <option value="Administración de Empresas con Énfasis en Mercadeo y Ventas">Administración de Empresas con Énfasis en Mercadeo y Ventas</option>
+                  <option value="Administración de Empresas con Énfasis en Recursos Humanos">Administración de Empresas con Énfasis en Recursos Humanos</option>
+                  <option value="Administración de Empresas con Énfasis en Relaciones Laborales">Administración de Empresas con Énfasis en Relaciones Laborales</option>
+                  <option value="Administración de Empresas con Énfasis en Transporte y Seguridad Vial">Administración de Empresas con Énfasis en Transporte y Seguridad Vial</option>
+                  <option value="Contaduría Pública">Contaduría Pública</option>
+                  <option value="Derecho">Derecho</option>
+                </select>
+                {errors.career && <p className="text-red-500 text-sm">{errors.career}</p>}
+              </div>
+            </div>
+          ))}
 
           <div>
             <label htmlFor="modalidadGraduacion" className="block text-sm font-medium text-gray-700">Modalidad de graduación</label>

@@ -25,6 +25,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentState,
         studentRegistration,
         link,
+        subjectCount
       } = req.body.data;
   const authHeader = req.headers.authorization;
 
@@ -41,8 +42,8 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
         historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition,
-        studentState, studentRegistration, link, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        studentState, studentRegistration, link, subjectCount, creado_por
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await pool.query(query, [
@@ -50,8 +51,8 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       idNumber,
       idType,
       gender,
-      grade,
-      career,
+      JSON.stringify(grade),
+      JSON.stringify(career),
       modalidadGraduacion,
       JSON.stringify(documentosAdjuntos),
       JSON.stringify(convalidaciones),
@@ -65,6 +66,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       studentState,
       studentRegistration,
       link,
+      subjectCount,
       userId,
     ]);
 
@@ -96,13 +98,13 @@ router.get("/", async (req: Request, res: Response) => {
   }
 
   if (grade) {
-    sql += " AND grade = ?";
-    values.push(grade);
+    sql += " AND grade LIKE ?";
+    values.push(`%${grade}%`);
   }
 
   if (career) {
-    sql += " AND career = ?";
-    values.push(career);
+    sql += " AND career LIKE ?";
+    values.push(`%${career}%`);
   }
 
   if (studentState) {
@@ -152,6 +154,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     studentState,
     studentRegistration,
     link,
+    subjectCount,
   } = req.body.data;
   
   const authHeader = req.headers.authorization;
@@ -163,7 +166,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?, subjectCount = ?
       WHERE id = ?`;
 
     const values = [
@@ -171,8 +174,8 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       idNumber,
       idType,
       gender,
-      grade,
-      career,
+      JSON.stringify(grade),
+      JSON.stringify(career),
       modalidadGraduacion,
       JSON.stringify(documentosAdjuntos),
       JSON.stringify(convalidaciones),
@@ -185,6 +188,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       studentState,
       studentRegistration,
       link,
+      subjectCount,
       id,
     ];
     

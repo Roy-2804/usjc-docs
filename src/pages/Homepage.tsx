@@ -159,8 +159,32 @@ function Homepage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.idNumber}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.gender}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.grade}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-[50px] overflow-x-scroll no-scrollbar">{doc.career}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {(() => {
+                          if (Array.isArray(doc.grade)) {
+                            return doc.grade.join(", ");
+                          }
+                          try {
+                            const parsed = JSON.parse(doc.grade || "[]");
+                            return Array.isArray(parsed) ? parsed.join(", ") : doc.grade;
+                          } catch {
+                            return doc.grade;
+                          }
+                        })()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-[50px] overflow-x-scroll no-scrollbar">
+                        {(() => {
+                          if (Array.isArray(doc.career)) {
+                            return doc.career.join(", ");
+                          }
+                          try {
+                            const parsed = JSON.parse(doc.career || "[]");
+                            return Array.isArray(parsed) ? parsed.join(", ") : doc.career;
+                          } catch {
+                            return doc.career;
+                          }
+                        })()}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.studentState}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline flex gap-4 justify-center">
                         <a href={`/doc/node/${doc.id}/edit`} className="text-blue-600 hover:underline w-[20px] h-[20px] block">

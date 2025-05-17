@@ -4,8 +4,8 @@ export interface FormData {
     idNumber: string;
     idType: string;
     gender: string;
-    grade: string;
-    career: string;
+    grade: string[];
+    career: string[];
     modalidadGraduacion: string;
     documentosAdjuntos: string[];
     convalidaciones: string[];
@@ -19,6 +19,7 @@ export interface FormData {
     studentState: string;
     studentRegistration: string;
     link: string;
+    subjectCount: string;
 }
 
 export interface Errors {
@@ -31,6 +32,7 @@ export interface Errors {
     studentCondition?: string;
     studentState?: string;
     studentRegistration?: string;
+    subjectCount?: string;
 }
 
 export interface UserProfile {
