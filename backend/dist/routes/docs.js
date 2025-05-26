@@ -17,7 +17,7 @@ const db_1 = require("../config/db");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const router = (0, express_1.Router)();
 router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { studentName, idNumber, idType, gender, grade, career, modalidadGraduacion, documentosAdjuntos, convalidaciones, boletasMatricula, tcu, historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition, studentState, studentRegistration, link, } = req.body.data;
+    const { studentName, idNumber, idType, gender, grade, career, modalidadGraduacion, documentosAdjuntos, convalidaciones, boletasMatricula, tcu, historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition, studentState, studentRegistration, link, subjectCount } = req.body.data;
     const authHeader = req.headers.authorization;
     if (!authHeader)
         return res.status(401).json({ error: "Token no proporcionado" });
@@ -30,16 +30,16 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
         studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
         historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition,
-        studentState, studentRegistration, link, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        studentState, studentRegistration, link, subjectCount, creado_por
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
         yield db_1.pool.query(query, [
             studentName,
             idNumber,
             idType,
             gender,
-            grade,
-            career,
+            JSON.stringify(grade),
+            JSON.stringify(career),
             modalidadGraduacion,
             JSON.stringify(documentosAdjuntos),
             JSON.stringify(convalidaciones),
@@ -53,6 +53,7 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
             studentState,
             studentRegistration,
             link,
+            subjectCount,
             userId,
         ]);
         res.status(201).json({ message: "Expediente registrado correctamente" });
@@ -79,12 +80,12 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         values.push(gender);
     }
     if (grade) {
-        sql += " AND grade = ?";
-        values.push(grade);
+        sql += " AND grade LIKE ?";
+        values.push(`%${grade}%`);
     }
     if (career) {
-        sql += " AND career = ?";
-        values.push(career);
+        sql += " AND career LIKE ?";
+        values.push(`%${career}%`);
     }
     if (studentState) {
         sql += " AND studentState = ?";
@@ -112,7 +113,7 @@ router.get("/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { studentName, idNumber, idType, gender, grade, career, modalidadGraduacion, documentosAdjuntos, convalidaciones, boletasMatricula, tcu, historialAcademico, documentacionAdicional, actasCalificacion, studentCondition, studentState, studentRegistration, link, } = req.body.data;
+    const { studentName, idNumber, idType, gender, grade, career, modalidadGraduacion, documentosAdjuntos, convalidaciones, boletasMatricula, tcu, historialAcademico, documentacionAdicional, actasCalificacion, studentCondition, studentState, studentRegistration, link, subjectCount, } = req.body.data;
     const authHeader = req.headers.authorization;
     if (!authHeader)
         return res.status(401).json({ error: "Token no proporcionado" });
@@ -121,15 +122,15 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?, subjectCount = ?
       WHERE id = ?`;
         const values = [
             studentName,
             idNumber,
             idType,
             gender,
-            grade,
-            career,
+            JSON.stringify(grade),
+            JSON.stringify(career),
             modalidadGraduacion,
             JSON.stringify(documentosAdjuntos),
             JSON.stringify(convalidaciones),
@@ -142,6 +143,7 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
             studentState,
             studentRegistration,
             link,
+            subjectCount,
             id,
         ];
         const resultado = yield db_1.pool.query(sql, values);

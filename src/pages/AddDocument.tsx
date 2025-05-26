@@ -47,8 +47,8 @@ function AddDocument() {
     idNumber: "",
     idType: "",
     gender: "",
-    grade: "",
-    career: "",
+    grade: [],
+    career: [],
     modalidadGraduacion: "",
     documentosAdjuntos: [],
     convalidaciones: [],
@@ -62,6 +62,7 @@ function AddDocument() {
     studentState: "",
     studentRegistration: "",
     link: "",
+    subjectCount: "1",
   });
 
   const clearForm = () => {
@@ -71,8 +72,8 @@ function AddDocument() {
       idNumber: "",
       idType: "",
       gender: "",
-      grade: "",
-      career: "",
+      grade: [],
+      career: [],
       modalidadGraduacion: "",
       documentosAdjuntos: [],
       convalidaciones: [],
@@ -86,6 +87,7 @@ function AddDocument() {
       studentState: "",
       studentRegistration: "",
       link: "",
+      subjectCount: "1",
     });
   };
   const [errors, setErrors] = useState<Errors>({});

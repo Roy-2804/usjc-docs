@@ -126,11 +126,6 @@ interface Props {
     student: FormData;
 }
 
-const getValidLink = (url: string) => {
-  if (!url) return '';
-  return url.startsWith('http') ? url : `https://${url}`;
-};
-
 const StudentPDF: React.FC<Props> = ({ student }) => {
   const [qrCode, setQrCode] = useState<string>('');
 

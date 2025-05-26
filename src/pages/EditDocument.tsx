@@ -51,8 +51,8 @@ function EditDocument() {
     idNumber: "",
     idType: "",
     gender: "",
-    grade: "",
-    career: "",
+    grade: [],
+    career: [],
     modalidadGraduacion: "",
     documentosAdjuntos: [],
     convalidaciones: [],
@@ -66,6 +66,7 @@ function EditDocument() {
     studentState: "",
     studentRegistration: "",
     link: "",
+    subjectCount: ""
   });
   useEffect(() => {
     const fetchExpedientes = async () => {
@@ -93,7 +94,8 @@ function EditDocument() {
           studentCondition: expedienteData.observaciones || "",
           studentState: expedienteData.fechaRegistro || "",
           studentRegistration: expedienteData.fechaGraduacion || "",
-          link: expedienteData.link || ""
+          link: expedienteData.link || "",
+          subjectCount: expedienteData.subjectCount || "",
         });
       } catch (err) {
         console.error("Error al obtener expediente:", err);
