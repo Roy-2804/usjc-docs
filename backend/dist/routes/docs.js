@@ -113,7 +113,7 @@ router.get("/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { studentName, idNumber, idType, gender, grade, career, modalidadGraduacion, documentosAdjuntos, convalidaciones, boletasMatricula, tcu, historialAcademico, documentacionAdicional, actasCalificacion, studentCondition, studentState, studentRegistration, link, subjectCount, } = req.body.data;
+    const { studentName, idNumber, idType, gender, grade, career, modalidadGraduacion, documentosAdjuntos, convalidaciones, boletasMatricula, tcu, historialAcademico, documentacionAdicional, actasCalificacion, studentCondition, studentState, studentRegistration, qualifications, link, subjectCount, } = req.body.data;
     const authHeader = req.headers.authorization;
     if (!authHeader)
         return res.status(401).json({ error: "Token no proporcionado" });
@@ -122,7 +122,7 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?, subjectCount = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, qualifications = ?, link = ?, subjectCount = ?
       WHERE id = ?`;
         const values = [
             studentName,
@@ -142,6 +142,7 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
             studentCondition,
             studentState,
             studentRegistration,
+            qualifications,
             link,
             subjectCount,
             id,

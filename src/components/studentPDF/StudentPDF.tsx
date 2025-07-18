@@ -193,7 +193,7 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           {Array.from({ length: parseInt(student.subjectCount) || 0 }).map((_, idx) => (
             <View key={idx}>
               <Text style={[styles.label]}>Carrera: {student.career[idx] || "(Sin carrera)"} {"\n"}</Text>
-              <Text style={[styles.label]}>Grado: {student.grade[idx]}</Text>
+              <Text style={[styles.label]}>Grado: {student.grade[idx] || "(Sin grado)"}</Text>
           </View>
           ))}
           <Text style={styles.subtitle}>DOCUMENTACIÓN</Text>
@@ -283,15 +283,38 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
                   <Text style={[styles.checkbox, styles.green]}></Text>
                 </View>
   
-                {(typeof student.actasCalificacion === "string"
-                    ? JSON.parse(student.actasCalificacion)
-                    : student.actasCalificacion
-                  ).map((acta: string, idx: number) => (
+                {(() => {
+                  const actasCalificacion = student.actasCalificacion as string | string[] | null;
+                  let actas: string[] = [];
+
+                  if (typeof actasCalificacion === "string" && actasCalificacion.trim() !== "") {
+                    try {
+                      let parsed = JSON.parse(actasCalificacion);
+
+                      // Si sigue siendo string tras el primer parse, parsear de nuevo
+                      if (typeof parsed === "string") {
+                        parsed = JSON.parse(parsed);
+                      }
+
+                      if (Array.isArray(parsed)) {
+                        actas = parsed;
+                      } else {
+                        console.error("actasCalificacion JSON parsed but is not an array:", parsed);
+                      }
+                    } catch (error) {
+                      console.error("Error parsing actasCalificacion:", error);
+                    }
+                  } else if (Array.isArray(actasCalificacion)) {
+                    actas = actasCalificacion;
+                  }
+
+                  return actas.map((acta: string, idx: number) => (
                     <View style={styles.checkboxWrapper} key={idx}>
                       <Text style={styles.checkboxLabel}>{acta}</Text>
                       <Text style={[styles.checkbox, styles.green]}></Text>
                     </View>
-                ))}
+                  ));
+                })()}
   
                 {typeof student.qualifications === "string" &&
                   <View style={styles.checkboxWrapper}>

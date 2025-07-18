@@ -164,7 +164,7 @@ const DocumentForm = () => {
       updatedArray[i] = value;
       updatedForm[name] = updatedArray;
     }
-
+    
     if (id === "modalidadGraduacion" ) {
       updatedForm.qualifications = [];
       updatedForm.actasCalificacion = [];

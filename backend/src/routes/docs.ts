@@ -153,6 +153,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     studentCondition,
     studentState,
     studentRegistration,
+    qualifications,
     link,
     subjectCount,
   } = req.body.data;
@@ -166,7 +167,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?, subjectCount = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, qualifications = ?, link = ?, subjectCount = ?
       WHERE id = ?`;
 
     const values = [
@@ -187,6 +188,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       studentCondition,
       studentState,
       studentRegistration,
+      qualifications,
       link,
       subjectCount,
       id,
