@@ -30,7 +30,16 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!isMatch)
             return res.status(401).json({ error: "Contraseña incorrecta" });
         const token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "2h" });
-        res.json({ token, user: { id: user.id, email: user.email, role: user.role, created_at: user.created_at, name: user.name } });
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                created_at: user.created_at,
+                name: user.name
+            }
+        });
     }
     catch (err) {
         console.log(err);
