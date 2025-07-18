@@ -6,8 +6,11 @@ import Header from "../components/header/header";
 import { getUser, newUser, updateUser } from "../services/userService";
 import axios from "axios";
 import { toast } from "react-toastify";
+import eye from '/eye.svg';
+import eyeOff from '/eye-off.svg';
 
 const UserForm = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const { id_number } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -130,10 +133,10 @@ const UserForm = () => {
               )}
             </div>
 
-            <div>
+            <div className="relative">
               <label htmlFor="pass" className="block text-sm font-medium text-gray-700">Contraseña</label>
               <input
-                type="password"
+                type={passwordVisible ? "text" : "password"}
                 id="pass"
                 name="pass"
                 className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 text-black"
@@ -144,11 +147,32 @@ const UserForm = () => {
               {errors.pass && (
                 <p className="text-red-500 text-sm">{errors.pass}</p>
               )}
+              <button
+                type="button"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+                className="absolute right-3 bottom-0 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors !bg-[transparent] !border-0
+                hover:!border-0 !p-0 focus:!outline-[0]"
+                aria-label={passwordVisible ? "Ocultar contraseña" : "Ver contraseña"}
+              >
+              {passwordVisible ? (
+                <img
+                alt="Eye off"
+                src={eyeOff}
+                className="size-6"
+              />
+              ) : (
+                <img
+                    alt="Eye"
+                    src={eye}
+                    className="size-6"
+                  />
+              )}
+            </button>
             </div>
 
             <div>
               <label htmlFor="role" className="block text-sm font-medium text-gray-700">Rol del usuario</label>
-              <select name="role" id="role" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2" value={formData.role}
+              <select name="role" id="role" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 text-black" value={formData.role}
                 onChange={handleChange}>
                   <option value="">Seleccionar</option>
                   <option value="admin">Admin</option>

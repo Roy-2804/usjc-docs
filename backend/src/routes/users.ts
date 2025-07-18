@@ -76,6 +76,10 @@ router.put("/update/user/:id", async (req: Request, res: Response): Promise<any>
   if (!authHeader) return res.status(401).json({ error: "Token no proporcionado" });
   
   try {
+    let hashedPassword = pass;
+    const saltRounds = 10;
+    hashedPassword = await bcrypt.hash(pass, saltRounds);
+
     const sql = `UPDATE users SET
       name = ?, email = ?, password = ?, role = ?
       WHERE id = ?`;
@@ -83,7 +87,7 @@ router.put("/update/user/:id", async (req: Request, res: Response): Promise<any>
     const values = [
       name,
       email,
-      pass,
+      hashedPassword,
       role,
       id,
     ];

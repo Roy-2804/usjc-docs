@@ -3,11 +3,14 @@ import { login } from "../services/authService";
 import logo from '/logo.png';
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import eye from '/eye.svg';
+import eyeOff from '/eye-off.svg';
 
 const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthenticated: boolean }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,10 +61,10 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
             />
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-600 mb-2">Contraseña</label>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -69,6 +72,27 @@ const Login = ({ onLogin, isAuthenticated }: { onLogin: () => void; isAuthentica
               placeholder="********"
               required
             />
+            <button
+                type="button"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+                className="absolute right-3 bottom-0 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors !bg-[transparent] !border-0
+                hover:!border-0 !p-0 focus:!outline-[0]"
+                aria-label={passwordVisible ? "Ocultar contraseña" : "Ver contraseña"}
+              >
+              {passwordVisible ? (
+                <img
+                alt="Eye off"
+                src={eyeOff}
+                className="size-6"
+              />
+              ) : (
+                <img
+                    alt="Eye"
+                    src={eye}
+                    className="size-6"
+                  />
+              )}
+            </button>
           </div>
 
           <button
