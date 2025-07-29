@@ -105,6 +105,23 @@ const DocumentForm = () => {
   });
   const [errors, setErrors] = useState<Errors>({});
 
+  function parsePossiblyEscapedJSON(value: any): string[] {
+    try {
+      if (Array.isArray(value)) return value;
+  
+      let parsed = value;
+  
+      // Intenta deserializar varias veces hasta obtener un array válido
+      while (typeof parsed === "string") {
+        parsed = JSON.parse(parsed);
+      }
+  
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
   const fetchExpediente = async (id_number: string) => {
     if (!id_number) return;
     setLoading(true);
@@ -370,8 +387,11 @@ const DocumentForm = () => {
           {checkboxGroups.map((group) => (
             <div key={group.name}>
               <p className="font-semibold text-gray-800 mt-4 mb-2">{group.title}</p>
+
               {group.options.map((option) => {
                 const id = `${group.name}-${option}`;
+                const currentValues = parsePossiblyEscapedJSON((formData as any)[group.name]);
+
                 return (
                   <div key={option} className="flex items-center space-x-2">
                     <input
@@ -379,13 +399,12 @@ const DocumentForm = () => {
                       id={id}
                       name={group.name}
                       value={option}
-                      checked={(formData as any)[group.name].includes(option)}
+                      checked={currentValues.includes(option)}
                       onChange={() => {
-                        const current = (formData as any)[group.name];
-                        const json = Array.isArray(current) ? current : JSON.parse(current)
-                        const updated = json.includes(option)
-                          ? json.filter((v: string) => v !== option)
-                          : [...json, option];
+                        const updated = currentValues.includes(option)
+                          ? currentValues.filter((v: string) => v !== option)
+                          : [...currentValues, option];
+
                         setFormData({ ...formData, [group.name]: updated });
                       }}
                       className="rounded border-gray-300"

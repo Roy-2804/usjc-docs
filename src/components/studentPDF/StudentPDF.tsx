@@ -14,7 +14,8 @@ import { generateQrBase64 } from '../../services/docsService';
 
 const styles = StyleSheet.create({
   page: {
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 40,
     fontFamily: 'Helvetica',
     fontSize: 12
   },
@@ -116,9 +117,9 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   qrImage: {
-    height: '250px',
+    height: '100px',
     margin: '0 auto',
-    width: '250px'
+    width: '100px'
   }
 });
 
@@ -210,6 +211,10 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
             <Text style={ student.documentosAdjuntos.includes("Título de secundaria") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
           <View style={styles.checkboxWrapper}>
+            <Text style={styles.checkboxLabel}>Verificación plataforma del MEP</Text>
+            <Text style={ student.documentosAdjuntos.includes("Verificación plataforma del MEP") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+          </View>
+          <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Certificación de estudios cursados en otras instituciones{'\n'}
             (aplica para convalidación de materias)</Text>
             <Text style={ student.documentosAdjuntos.includes("Verificación plataforma del MEP") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
@@ -249,6 +254,10 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Oficio de aprobación de la universidad</Text>
             <Text style={ student.tcu.includes("Oficio de aprobación de la universidad") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+          </View>
+          <View style={styles.checkboxWrapper}>
+            <Text style={styles.checkboxLabel}>Oficio de aprobación de la institución u organización</Text>
+            <Text style={ student.tcu.includes("Oficio de aprobación de la institución u organización") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Bitácora</Text>
@@ -332,6 +341,14 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Copia de títulos obtenidos</Text>
             <Text style={ student.documentacionAdicional.includes("Copia de títulos obtenidos") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+          </View>
+          <View style={styles.checkboxWrapper}>
+            <Text style={styles.checkboxLabel}>Otros</Text>
+            <Text style={ student.documentacionAdicional.includes("Otros") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+          </View>
+          <View style={styles.checkboxWrapper}>
+            <Text style={styles.checkboxLabel}>No posee</Text>
+            <Text style={ student.documentacionAdicional.includes("No posee") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
   
           { student.link && 

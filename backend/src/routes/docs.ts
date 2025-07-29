@@ -79,7 +79,11 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
 
 router.get("/", async (req: Request, res: Response) => {
   const { studentName, idNumber, gender, grade, career, studentState } = req.query;
-  let sql = "SELECT * FROM docs WHERE 1 = 1";
+  const page = req.query.page ? parseInt(req.query.page as string) : 1;
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+  const offset = (page - 1) * limit;
+  
+  let sql = "FROM docs WHERE 1 = 1";
   const values: any[] = [];
 
   if (studentName) {
@@ -111,10 +115,20 @@ router.get("/", async (req: Request, res: Response) => {
     sql += " AND studentState = ?";
     values.push(studentState);
   }
-
+  
   try {
-    const [rows] = await pool.query(sql, values);
-    res.json(rows);
+    const [countRows] = await pool.query(`SELECT COUNT(*) as total ${sql}`, values);
+    const total = (countRows as any)[0].total;
+    
+    // Obtener registros paginados
+    const [rows] = await pool.query(`SELECT * ${sql} LIMIT ? OFFSET ?`, [...values, limit, offset]);
+    
+    res.json({
+      data: rows,
+      total,
+      page,
+      limit
+    });
   } catch (err) {
     console.error("Error al obtener expedientes:", err);
     res.status(500).json({ error: "Error al obtener expedientes" });

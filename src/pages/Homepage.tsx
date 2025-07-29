@@ -18,15 +18,20 @@ function Homepage() {
     studentState: ""
   });
   const role = getUserRole();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(20);
 
   useEffect(() => {
-    fetchExpedientes();
-  }, []);
+    fetchExpedientes(formData, currentPage);
+  }, [currentPage]);
 
-  const fetchExpedientes = async (formData = {}) => {
+  const fetchExpedientes = async (formData = {}, page = 1) => {
     try {
-      const res = await getDocs(formData);
-      setExpedientes(res.data);
+      const res = await getDocs({ ...formData, page, limit });
+      setExpedientes(res.data.data);
+      const calculatedTotalPages = Math.ceil(res.data.total / limit);
+      setTotalPages(calculatedTotalPages);
     } catch (err) {
       console.error("Error al obtener expedientes:", err);
     }
@@ -44,6 +49,7 @@ function Homepage() {
     e.preventDefault();
     
     setLoading(true);
+    setCurrentPage(1);
     fetchExpedientes(formData);
     setLoading(false);
   }
@@ -57,6 +63,7 @@ function Homepage() {
       career: "",
       studentState: ""
     })
+    setCurrentPage(1);
   }
 
 	return <>
@@ -67,7 +74,7 @@ function Homepage() {
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-white"></div>
       </div>
       }
-    <div className="pt-8">
+    <div className="py-8">
       <h1 className="text-white font-bold mb-4">Listado de expedientes</h1>
       <form className="bg-white p-4 shadow-lg rounded-2xl mb-4 flex flex-wrap gap-4 items-center justify-between" onSubmit={activeFilter}>
         <h2 className="w-full text-lg font-semibold">Filtros</h2>
@@ -153,7 +160,7 @@ function Homepage() {
             <tbody className="divide-y divide-gray-200">
             {expedientes.length > 0 ? (
                   expedientes.map((doc) => (
-                    <tr key={doc.id}>
+                    <tr key={doc.id} className="hover:bg-[rgba(5,80,230,.05)] focus:bg-[rgba(5,80,230,.05)]">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         <a href={`/doc/node/${doc.id}`} className="text-blue-600 hover:underline">{doc.studentName}</a>
                       </td>
@@ -208,6 +215,35 @@ function Homepage() {
         </div>
       </div>
       </div>
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-4 gap-2">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded bg-blue-600 text-white disabled:bg-gray-400"
+          >
+            Anterior
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === i + 1 ? "bg-blue-700 text-white" : "bg-blue-200 text-gray-500"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded bg-blue-600 text-white disabled:bg-gray-400"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
 		</main>
 	</>;

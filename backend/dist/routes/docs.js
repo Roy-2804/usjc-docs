@@ -65,7 +65,10 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { studentName, idNumber, gender, grade, career, studentState } = req.query;
-    let sql = "SELECT * FROM docs WHERE 1 = 1";
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 20;
+    const offset = (page - 1) * limit;
+    let sql = "FROM docs WHERE 1 = 1";
     const values = [];
     if (studentName) {
         sql += " AND studentName LIKE ?";
@@ -92,8 +95,16 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         values.push(studentState);
     }
     try {
-        const [rows] = yield db_1.pool.query(sql, values);
-        res.json(rows);
+        const [countRows] = yield db_1.pool.query(`SELECT COUNT(*) as total ${sql}`, values);
+        const total = countRows[0].total;
+        // Obtener registros paginados
+        const [rows] = yield db_1.pool.query(`SELECT * ${sql} LIMIT ? OFFSET ?`, [...values, limit, offset]);
+        res.json({
+            data: rows,
+            total,
+            page,
+            limit
+        });
     }
     catch (err) {
         console.error("Error al obtener expedientes:", err);

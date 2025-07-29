@@ -51,6 +51,8 @@ export interface FilterData {
     grade?: string;
     career?: string;
     studentState?: string;
+    page?: number;
+    limit?: number;
 }
 
 export interface UserErrors {
