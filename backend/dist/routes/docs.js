@@ -66,7 +66,7 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { studentName, idNumber, gender, grade, career, studentState } = req.query;
     const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit) : 20;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 50;
     const offset = (page - 1) * limit;
     let sql = "FROM docs WHERE 1 = 1";
     const values = [];

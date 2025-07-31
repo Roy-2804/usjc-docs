@@ -14,7 +14,7 @@ export interface FormData {
     historialAcademico: string[];
     documentacionAdicional: string[];
     actasCalificacion: string[];
-    qualifications: string[];
+    qualifications: string;
     studentCondition: string;
     studentState: string;
     studentRegistration: string;

@@ -61,7 +61,7 @@ function EditDocument() {
     historialAcademico: [],
     documentacionAdicional: [],
     actasCalificacion: [],
-    qualifications: [],
+    qualifications: "",
     studentCondition: "",
     studentState: "",
     studentRegistration: "",

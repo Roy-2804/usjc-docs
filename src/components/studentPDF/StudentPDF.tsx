@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
-    gap: 20,
-    marginBottom: 30,
+    justifyContent: 'space-between',
+    gap: 0,
+    marginBottom: 40,
   },
   logo: {
     width: '40%'
@@ -40,8 +41,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#002E60',
     textAlign: 'center',
-    marginBottom: 20,
-    marginTop: 20,
+    marginBottom: 30,
+    marginTop: 30,
     textTransform: 'uppercase'
   },
   line: {
@@ -151,7 +152,9 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
               src="../../../public/logo.png"
             />
             <View style={styles.line}></View>
-            <Text style={styles.title}>Expediente Académico Estudiantil</Text>
+            <Text style={styles.title}>
+              Expediente{'\n'}Académico{'\n'}Estudiantil
+            </Text>
           </View>
           <Text style={styles.subtitle}>Datos generales</Text>
           <View style={styles.row}>
@@ -245,6 +248,15 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>No registra / no posee</Text>
             <Text style={ student.convalidaciones.includes("No registra / no posee") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+          </View>
+          <Text style={styles.subtitle}>BOLETAS DE MATRÍCULA</Text>
+          <View style={styles.checkboxWrapper}>
+            <Text style={styles.checkboxLabel}>Presentada</Text>
+            <Text style={ student.boletasMatricula.includes("Presentada") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+          </View>
+          <View style={styles.checkboxWrapper}>
+            <Text style={styles.checkboxLabel}>No registra</Text>
+            <Text style={ student.boletasMatricula.includes("No registra") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
           <Text style={styles.subtitle}>TRABAJO COMUNAL{'\n'} UNIVERSITARIO TCU</Text>
           <View style={styles.checkboxWrapper}>

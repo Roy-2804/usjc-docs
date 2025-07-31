@@ -15,28 +15,72 @@ const createCheckboxGroup = (
 ) => (
   <div>
     <p className="font-semibold text-gray-800 mt-4 mb-2">{title}</p>
-    {options.map((option) => {
-      const id = `${name}-${option}`;
+    {options.map((option, index) => {
+       const id = `${name}-${option}`;
+       const isChecked = formData[name].includes(option);
+       const qualificationsRaw = typeof formData.qualifications === 'string'
+       ? formData.qualifications
+       : '';
+      const notes = qualificationsRaw.split(',');
+      const currentNote = notes[index] || '';
+
       return (
-        <div key={option} className="flex items-center space-x-2">
+        <div key={option} className="flex items-center space-x-2 mb-2">
           <input
             type="checkbox"
             id={id}
             name={name}
             value={option}
-            checked={formData[name].includes(option)}
+            checked={isChecked}
             onChange={(e) => {
               const value = e.target.value;
-              const current = (formData as any)[name];
-              const json = Array.isArray(current) ? current : JSON.parse(current)
-              const updated = json.includes(value)
-                 ? json.filter((v: string) => v !== value)
-                 : [...json, value];
-              setFormData({ ...formData, [name]: updated });
+              const current = Array.isArray(formData[name])
+                ? formData[name]
+                : JSON.parse(formData[name]);
+
+              const updated = current.includes(value)
+                ? current.filter((v: string) => v !== value)
+                : [...current, value];
+
+              const newNotes = [...notes];
+
+              if (!updated.includes(value)) {
+                newNotes[index] = '';
+              }
+
+              setFormData({
+                ...formData,
+                [name]: updated,
+                qualifications: newNotes.join(',') as string,
+              });
             }}
             className="rounded border-gray-300"
           />
           <label htmlFor={id} className="text-sm text-gray-700">{option}</label>
+          {isChecked && (
+              <input
+                type="text"
+                placeholder="Nota"
+                value={currentNote}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  const updatedNotes = formData.qualifications?.split(',') ?? [];
+
+                  // Asegurar longitud
+                  while (updatedNotes.length < options.length) {
+                    updatedNotes.push('');
+                  }
+
+                  updatedNotes[index] = newValue;
+
+                  setFormData({
+                    ...formData,
+                    qualifications: updatedNotes.join(','),
+                  });
+                }}
+                className="ml-6 rounded border border-gray-300 p-1 text-sm w-[300px]"
+              />
+            )}
         </div>
       );
     })}
@@ -96,7 +140,7 @@ const DocumentForm = () => {
     historialAcademico: [],
     documentacionAdicional: [],
     actasCalificacion: [],
-    qualifications: [],
+    qualifications: "",
     studentCondition: "",
     studentState: "",
     studentRegistration: "",
@@ -183,7 +227,7 @@ const DocumentForm = () => {
     }
     
     if (id === "modalidadGraduacion" ) {
-      updatedForm.qualifications = [];
+      updatedForm.qualifications = "";
       updatedForm.actasCalificacion = [];
     }
   
@@ -226,10 +270,11 @@ const DocumentForm = () => {
     <>
     <Header />
     <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div className="pt-8">
+      <div className="pt-8 relative">
         <h1 className="text-white font-bold mb-4">
           {id_number ? "Editar expediente" : "Añadir expediente"}
         </h1>
+        <a className="see-node bg-[#002E60] rounded-[50%] h-[40px] w-[40px] absolute right-0 top-[80px]" href={`/doc/node/${id_number}`}><span className='sr-only'>See node</span></a>
         <form className="space-y-4 bg-white p-6 rounded-lg" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="studentName" className="block text-sm font-medium text-gray-700">Nombre del estudiante</label>
@@ -336,9 +381,9 @@ const DocumentForm = () => {
               ) : null}
               {formData.modalidadGraduacion != 'Sin registro' ? (
                 <>
-                  <div>
+                  <div className="">
                     <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
-                    <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications} />
+                    <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications || ''} />
                   </div>
                 </>
               ) : null}

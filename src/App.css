@@ -40,3 +40,21 @@
   object-fit: cover;
   width: 20px;
 }
+
+.see-node {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+}
+
+.see-node::after {
+  background: url('/eye.svg') no-repeat center;
+  background-size: cover;
+  content: "";
+  display: flex;
+  filter: brightness(0) invert(1);
+  height: 20px;
+  object-fit: cover;
+  width: 20px;
+}

@@ -80,7 +80,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
 router.get("/", async (req: Request, res: Response) => {
   const { studentName, idNumber, gender, grade, career, studentState } = req.query;
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
-  const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
   const offset = (page - 1) * limit;
   
   let sql = "FROM docs WHERE 1 = 1";

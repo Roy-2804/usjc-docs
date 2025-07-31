@@ -20,7 +20,7 @@ function Homepage() {
   const role = getUserRole();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(20);
+  const [limit] = useState(50);
 
   useEffect(() => {
     fetchExpedientes(formData, currentPage);
