@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logo: {
-    width: '40%'
+    width: '30%'
   },
   title: {
     fontSize: 20,
@@ -220,16 +220,16 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Certificación de estudios cursados en otras instituciones{'\n'}
             (aplica para convalidación de materias)</Text>
-            <Text style={ student.documentosAdjuntos.includes("Verificación plataforma del MEP") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+            <Text style={ student.documentosAdjuntos.includes("Certificación de estudios cursados en otras instituciones (aplica para convalidación de materias)") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Certificación de TCU (otra universidad)</Text>
-            <Text style={ student.documentosAdjuntos.includes("Certificación de estudios cursados en otras instituciones") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+            <Text style={ student.documentosAdjuntos.includes("Certificación de TCU (otra universidad)") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
           <View style={styles.checkboxWrapper}>
-            <Text style={styles.checkboxLabel}>Validación de títulos y apostillas en caso de estudios en el exterior{'\n'}
-            (aplica para estudiantes que cursaron estudios en el exterior)</Text>
-            <Text style={ student.documentosAdjuntos.includes("Certificación de TCU (otra universidad)") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
+            <Text style={styles.checkboxLabel}>Documento de validación de títulos{'\n'}
+            y apostillas en caso de estudios en el exterior</Text>
+            <Text style={ student.documentosAdjuntos.includes("Documento de validación de títulos y apostillas en caso de estudios en el exterior") ? [styles.checkbox, styles.green] : styles.checkbox}></Text>
           </View>
           <View style={styles.checkboxWrapper}>
             <Text style={styles.checkboxLabel}>Copia del título universitario requerido{'\n'}

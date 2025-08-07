@@ -167,17 +167,24 @@ function Homepage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.idNumber}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doc.gender}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {(() => {
-                          if (Array.isArray(doc.grade)) {
-                            return doc.grade.join(", ");
+                      {(() => {
+                        const rawSubjectCount = doc.subjectCount;
+                        const subjectCount = parseInt(rawSubjectCount, 10);
+
+                        if (Array.isArray(doc.grade)) {
+                          return doc.grade.slice(0, subjectCount).join(", ");
+                        }
+
+                        try {
+                          const parsed = JSON.parse(doc.grade || "[]");
+                          if (Array.isArray(parsed)) {
+                            return parsed.slice(0, subjectCount).join(", ");
                           }
-                          try {
-                            const parsed = JSON.parse(doc.grade || "[]");
-                            return Array.isArray(parsed) ? parsed.join(", ") : doc.grade;
-                          } catch {
-                            return doc.grade;
-                          }
-                        })()}
+                          return doc.grade;
+                        } catch {
+                          return doc.grade;
+                        }
+                      })()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-[50px] overflow-x-scroll no-scrollbar">
                         {(() => {

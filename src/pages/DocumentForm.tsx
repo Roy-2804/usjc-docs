@@ -61,7 +61,7 @@ const createCheckboxGroup = (
               <input
                 type="text"
                 placeholder="Nota"
-                value={currentNote}
+                value={currentNote.replace(/^"(.*)"$/, '$1')}
                 onChange={(e) => {
                   const newValue = e.target.value;
                   const updatedNotes = formData.qualifications?.split(',') ?? [];
@@ -185,6 +185,7 @@ const DocumentForm = () => {
         ...formData,
         ...parsedExpediente,
       });
+      console.log(parsedExpediente)
     } catch (error) {
       toast.error("Error al obtener expediente");
       console.error("Error al obtener expediente:", error);
@@ -381,7 +382,7 @@ const DocumentForm = () => {
               ) : null}
               {formData.modalidadGraduacion != 'Sin registro' ? (
                 <>
-                  <div className="">
+                  <div className="hidden">
                     <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
                     <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications || ''} />
                   </div>
