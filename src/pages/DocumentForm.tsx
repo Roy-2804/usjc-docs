@@ -100,7 +100,7 @@ const createCheckboxGroup = (
                     studentGraduations: updatedGraduations
                   });
                 }}                
-                className="ml-6 rounded border border-gray-300 p-1 text-sm w-[300px]"
+                className="ml-6 rounded border border-gray-300 p-1 text-sm w-[300px] text-black"
               />
             )}
         </div>

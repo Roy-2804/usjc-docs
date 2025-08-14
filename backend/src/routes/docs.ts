@@ -33,10 +33,14 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
   if (!authHeader) return res.status(401).json({ error: "Token no proporcionado" });
 
   const token = authHeader.split(" ")[1];
+  let connection;
 
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
     const userId = decoded.id;
+
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
 
     const query = `
       INSERT INTO docs (
@@ -47,7 +51,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    const [result] = await pool.query(query, [
+    const values = [
       studentName,
       idNumber,
       idType,
@@ -68,12 +72,13 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       link,
       subjectCount,
       userId,
-    ]);
+    ];
+    const [result] = await connection.query(query, values);
   
     const insertedDocId = (result as any).insertId;
     if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
       for (const graduation of studentGraduations) {
-        await pool.query(
+        await connection.query(
           `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
           [
             insertedDocId,
@@ -84,10 +89,13 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       }
     }
 
+    await connection.commit();
     res.status(201).json({ message: "Expediente registrado correctamente" });
   } catch (err) {
     console.error("Error al registrar expediente:", err);
     res.status(500).json({ error: "Error al registrar expediente" });
+  } finally {
+    if (connection) connection.release();
   }
 });
 
@@ -218,8 +226,13 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
   const authHeader = req.headers.authorization;
 
   if (!authHeader) return res.status(401).json({ error: "Token no proporcionado" });
+
+  let connection;
   
   try {
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
     const sql = `UPDATE docs SET
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
@@ -249,10 +262,10 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       subjectCount,
       id,
     ];
-    
-    const resultado = await pool.query(sql, values);
 
-    await pool.query(`DELETE FROM user_graduations WHERE uid = ?`, [id]);
+    await connection.query(sql, values);
+
+    await connection.query(`DELETE FROM user_graduations WHERE uid = ?`, [id]);
 
     if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
       for (const graduation of studentGraduations) {
@@ -275,7 +288,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
           }
         }
         
-        await pool.query(
+        await connection.query(
           `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
           [
             id,
@@ -285,10 +298,15 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
         );
       }
     }
+
+    await connection.commit();
     res.status(200).json({ message: "Expediente actualizado correctamente" });
   } catch (error) {
+    if (connection) await connection.rollback();
     console.error("Error al actualizar expediente:", error);
     res.status(500).json({ error: "Error al actualizar expediente" });
+  } finally {
+    if (connection) connection.release();
   }
 });
 

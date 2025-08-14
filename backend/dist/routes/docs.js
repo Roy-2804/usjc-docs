@@ -22,9 +22,12 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
     if (!authHeader)
         return res.status(401).json({ error: "Token no proporcionado" });
     const token = authHeader.split(" ")[1];
+    let connection;
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
+        connection = yield db_1.pool.getConnection();
+        yield connection.beginTransaction();
         const query = `
       INSERT INTO docs (
         studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
@@ -33,7 +36,7 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
         studentState, studentRegistration, link, subjectCount, creado_por
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-        const [result] = yield db_1.pool.query(query, [
+        const values = [
             studentName,
             idNumber,
             idType,
@@ -54,22 +57,28 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
             link,
             subjectCount,
             userId,
-        ]);
+        ];
+        const [result] = yield connection.query(query, values);
         const insertedDocId = result.insertId;
         if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
             for (const graduation of studentGraduations) {
-                yield db_1.pool.query(`INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`, [
+                yield connection.query(`INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`, [
                     insertedDocId,
                     graduation.qualifications ? JSON.stringify(graduation.qualifications) : null,
                     graduation.graduation ? JSON.stringify(graduation.graduation) : null,
                 ]);
             }
         }
+        yield connection.commit();
         res.status(201).json({ message: "Expediente registrado correctamente" });
     }
     catch (err) {
         console.error("Error al registrar expediente:", err);
         res.status(500).json({ error: "Error al registrar expediente" });
+    }
+    finally {
+        if (connection)
+            connection.release();
     }
 }));
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -149,7 +158,10 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
     const authHeader = req.headers.authorization;
     if (!authHeader)
         return res.status(401).json({ error: "Token no proporcionado" });
+    let connection;
     try {
+        connection = yield db_1.pool.getConnection();
+        yield connection.beginTransaction();
         const sql = `UPDATE docs SET
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
@@ -178,8 +190,8 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
             subjectCount,
             id,
         ];
-        const resultado = yield db_1.pool.query(sql, values);
-        yield db_1.pool.query(`DELETE FROM user_graduations WHERE uid = ?`, [id]);
+        yield connection.query(sql, values);
+        yield connection.query(`DELETE FROM user_graduations WHERE uid = ?`, [id]);
         if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
             for (const graduation of studentGraduations) {
                 let qualificationsToInsert = null;
@@ -200,18 +212,25 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
                         graduationToInsert = JSON.stringify(graduation.graduation);
                     }
                 }
-                yield db_1.pool.query(`INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`, [
+                yield connection.query(`INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`, [
                     id,
                     qualificationsToInsert,
                     graduationToInsert,
                 ]);
             }
         }
+        yield connection.commit();
         res.status(200).json({ message: "Expediente actualizado correctamente" });
     }
     catch (error) {
+        if (connection)
+            yield connection.rollback();
         console.error("Error al actualizar expediente:", error);
         res.status(500).json({ error: "Error al actualizar expediente" });
+    }
+    finally {
+        if (connection)
+            connection.release();
     }
 }));
 router.delete("/delete/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
