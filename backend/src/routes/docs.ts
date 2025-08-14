@@ -25,7 +25,8 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
         studentState,
         studentRegistration,
         link,
-        subjectCount
+        subjectCount,
+        studentGraduations
       } = req.body.data;
   const authHeader = req.headers.authorization;
 
@@ -41,19 +42,19 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       INSERT INTO docs (
         studentName, idNumber, idType, gender, grade, career, modalidadGraduacion,
         documentosAdjuntos, convalidaciones, boletasMatricula, tcu,
-        historialAcademico, documentacionAdicional, actasCalificacion, qualifications, studentCondition,
+        historialAcademico, documentacionAdicional, actasCalificacion, studentCondition,
         studentState, studentRegistration, link, subjectCount, creado_por
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    await pool.query(query, [
+    const [result] = await pool.query(query, [
       studentName,
       idNumber,
       idType,
       gender,
       JSON.stringify(grade),
       JSON.stringify(career),
-      modalidadGraduacion,
+      JSON.stringify(modalidadGraduacion),
       JSON.stringify(documentosAdjuntos),
       JSON.stringify(convalidaciones),
       JSON.stringify(boletasMatricula),
@@ -61,7 +62,6 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       JSON.stringify(historialAcademico),
       JSON.stringify(documentacionAdicional),
       JSON.stringify(actasCalificacion),
-      JSON.stringify(qualifications),
       studentCondition,
       studentState,
       studentRegistration,
@@ -69,6 +69,20 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
       subjectCount,
       userId,
     ]);
+  
+    const insertedDocId = (result as any).insertId;
+    if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
+      for (const graduation of studentGraduations) {
+        await pool.query(
+          `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
+          [
+            insertedDocId,
+            graduation.qualifications ? JSON.stringify(graduation.qualifications) : null,
+            graduation.graduation ? JSON.stringify(graduation.graduation) : null,
+          ]
+        );
+      }
+    }
 
     res.status(201).json({ message: "Expediente registrado correctamente" });
   } catch (err) {
@@ -80,7 +94,7 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
 router.get("/", async (req: Request, res: Response) => {
   const { studentName, idNumber, gender, grade, career, studentState } = req.query;
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
-  const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
   const offset = (page - 1) * limit;
   
   let sql = "FROM docs WHERE 1 = 1";
@@ -135,14 +149,42 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/node/:id", async (req: Request, res: Response) => {
+router.get("/node/:id", async (req: Request, res: Response): Promise<any> => {
   const id = req.params.id;
+
   try {
-    const expediente = await pool.query(`SELECT * FROM docs WHERE id=${id}`);
-    res.status(200).json(expediente);
+    // Obtener expediente
+    const [docsRows]: any = await pool.query(
+      `SELECT * FROM docs WHERE id = ?`,
+      [id]
+    );
+
+    if (docsRows.length === 0) {
+      return res.status(404).json({ error: "Expediente no encontrado" });
+    }
+
+    const expediente = docsRows[0];
+
+    // Obtener graduaciones asociadas
+    const [graduationsRows]: any = await pool.query(
+      `SELECT qualifications, graduation FROM user_graduations WHERE uid = ?`,
+      [id]
+    );
+
+    // Formar estructura final
+    const formData = {
+      ...expediente,
+      studentGraduations: graduationsRows.map((row: any) => ({
+        qualifications: row.qualifications,
+        graduation: row.graduation
+      }))
+    };
+
+    return res.status(200).json(formData);
+
   } catch (err) {
-    console.error("Error al obtener expedientes:", err);
-    res.status(500).json({ error: "Error al obtener expedientes" });
+    console.error("Error al obtener expediente:", err);
+    return res.status(500).json({ error: "Error al obtener expediente" });
   }
 });
 
@@ -170,6 +212,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     qualifications,
     link,
     subjectCount,
+    studentGraduations
   } = req.body.data;
   
   const authHeader = req.headers.authorization;
@@ -181,7 +224,7 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       studentName = ?, idNumber = ?, idType = ?, gender = ?, grade = ?, career = ?,
       modalidadGraduacion = ?, documentosAdjuntos = ?, convalidaciones = ?,
       boletasMatricula = ?, tcu = ?, historialAcademico = ?, documentacionAdicional = ?,
-      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, qualifications = ?, link = ?, subjectCount = ?
+      actasCalificacion = ?, studentCondition = ?, studentState = ?, studentRegistration = ?, link = ?, subjectCount = ?
       WHERE id = ?`;
 
     const values = [
@@ -189,26 +232,59 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
       idNumber,
       idType,
       gender,
-      JSON.stringify(grade),
-      JSON.stringify(career),
-      modalidadGraduacion,
-      JSON.stringify(documentosAdjuntos),
-      JSON.stringify(convalidaciones),
-      JSON.stringify(boletasMatricula),
-      JSON.stringify(tcu),
-      JSON.stringify(historialAcademico),
-      JSON.stringify(documentacionAdicional),
-      JSON.stringify(actasCalificacion),
+      typeof grade === 'string' ? grade : JSON.stringify(grade),
+      typeof career === 'string' ? career : JSON.stringify(career),
+      typeof modalidadGraduacion === 'string' ? modalidadGraduacion : JSON.stringify(modalidadGraduacion),
+      typeof documentosAdjuntos === 'string' ? documentosAdjuntos : JSON.stringify(documentosAdjuntos),
+      typeof convalidaciones === 'string' ? convalidaciones : JSON.stringify(convalidaciones),
+      typeof boletasMatricula === 'string' ? boletasMatricula : JSON.stringify(boletasMatricula),
+      typeof tcu === 'string' ? tcu : JSON.stringify(tcu),
+      typeof historialAcademico === 'string' ? historialAcademico : JSON.stringify(historialAcademico),
+      typeof documentacionAdicional === 'string' ? documentacionAdicional : JSON.stringify(documentacionAdicional),
+      typeof actasCalificacion === 'string' ? actasCalificacion : JSON.stringify(actasCalificacion),
       studentCondition,
       studentState,
       studentRegistration,
-      qualifications,
       link,
       subjectCount,
       id,
     ];
     
     const resultado = await pool.query(sql, values);
+
+    await pool.query(`DELETE FROM user_graduations WHERE uid = ?`, [id]);
+
+    if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
+      for (const graduation of studentGraduations) {
+        let qualificationsToInsert = null;
+
+        if (graduation.qualifications) {
+          if (typeof graduation.qualifications === 'string') {
+            qualificationsToInsert = JSON.stringify(JSON.parse(graduation.qualifications));
+          } else if (Array.isArray(graduation.qualifications)) {
+            qualificationsToInsert = JSON.stringify(graduation.qualifications);
+          }
+        }
+
+        let graduationToInsert = null;
+        if (graduation.graduation) {
+          if (typeof graduation.graduation === 'string') {
+            graduationToInsert = JSON.stringify(JSON.parse(graduation.graduation));
+          } else if (Array.isArray(graduation.graduation)) {
+            graduationToInsert = JSON.stringify(graduation.graduation);
+          }
+        }
+        
+        await pool.query(
+          `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
+          [
+            id,
+            qualificationsToInsert,
+            graduationToInsert,
+          ]
+        );
+      }
+    }
     res.status(200).json({ message: "Expediente actualizado correctamente" });
   } catch (error) {
     console.error("Error al actualizar expediente:", error);

@@ -7,6 +7,7 @@ import Header from "../components/header/header";
 import { toast } from "react-toastify";
 
 const createCheckboxGroup = (
+  idx: number,
   title: string,
   name: keyof FormData,
   options: string[],
@@ -16,13 +17,8 @@ const createCheckboxGroup = (
   <div>
     <p className="font-semibold text-gray-800 mt-4 mb-2">{title}</p>
     {options.map((option, index) => {
-       const id = `${name}-${option}`;
-       const isChecked = formData[name].includes(option);
-       const qualificationsRaw = typeof formData.qualifications === 'string'
-       ? formData.qualifications
-       : '';
-      const notes = qualificationsRaw.split(',');
-      const currentNote = notes[index] || '';
+       const id = `${name}-${option}-${idx}`;
+       const isChecked = !!formData.studentGraduations?.[idx]?.graduation?.includes(option);
 
       return (
         <div key={option} className="flex items-center space-x-2 mb-2">
@@ -34,24 +30,35 @@ const createCheckboxGroup = (
             checked={isChecked}
             onChange={(e) => {
               const value = e.target.value;
-              const current = Array.isArray(formData[name])
-                ? formData[name]
-                : JSON.parse(formData[name]);
+              let current: string[] = [];
 
-              const updated = current.includes(value)
-                ? current.filter((v: string) => v !== value)
-                : [...current, value];
-
-              const newNotes = [...notes];
-
-              if (!updated.includes(value)) {
-                newNotes[index] = '';
+              const graduation = formData.studentGraduations?.[idx]?.graduation;
+              if (Array.isArray(graduation)) {
+                current = graduation;
+              } else if (typeof graduation === "string" && graduation.length) {
+                try {
+                  current = JSON.parse(graduation);
+                  if (!Array.isArray(current)) {
+                    current = [];
+                  }
+                } catch {
+                  current = [];
+                }
               }
+
+              const newGraduation = e.target.checked
+                ? [...current, value]
+                : current.filter((v) => v !== value);
+
+              const updatedGraduations = [...formData.studentGraduations];
+              updatedGraduations[idx] = {
+                ...updatedGraduations[idx],
+                graduation: newGraduation
+              };
 
               setFormData({
                 ...formData,
-                [name]: updated,
-                qualifications: newNotes.join(',') as string,
+                studentGraduations: updatedGraduations
               });
             }}
             className="rounded border-gray-300"
@@ -61,23 +68,38 @@ const createCheckboxGroup = (
               <input
                 type="text"
                 placeholder="Nota"
-                value={currentNote.replace(/^"(.*)"$/, '$1')}
+                value={
+                  Array.isArray(formData.studentGraduations?.[idx]?.qualifications)
+                    ? formData.studentGraduations[idx].qualifications[index] ?? ''
+                    : typeof formData.studentGraduations?.[idx]?.qualifications === 'string'
+                      ? JSON.parse(formData.studentGraduations[idx].qualifications)[index] ?? ''
+                      : ''
+                }
                 onChange={(e) => {
                   const newValue = e.target.value;
-                  const updatedNotes = formData.qualifications?.split(',') ?? [];
-
-                  // Asegurar longitud
+                  const qualificationsValue = formData.studentGraduations?.[idx]?.qualifications;
+                
+                  const updatedNotes = Array.isArray(qualificationsValue)
+                    ? [...qualificationsValue]
+                    : (qualificationsValue ?? '').split(',');
+                
                   while (updatedNotes.length < options.length) {
                     updatedNotes.push('');
                   }
-
+                
                   updatedNotes[index] = newValue;
-
+                
+                  const updatedGraduations = [...formData.studentGraduations];
+                  updatedGraduations[idx] = {
+                    ...updatedGraduations[idx],
+                    qualifications: updatedNotes
+                  };
+                
                   setFormData({
                     ...formData,
-                    qualifications: updatedNotes.join(','),
+                    studentGraduations: updatedGraduations
                   });
-                }}
+                }}                
                 className="ml-6 rounded border border-gray-300 p-1 text-sm w-[300px]"
               />
             )}
@@ -132,7 +154,7 @@ const DocumentForm = () => {
     gender: "",
     grade: [""],
     career: [""],
-    modalidadGraduacion: "",
+    modalidadGraduacion: [""],
     documentosAdjuntos: [],
     convalidaciones: [],
     boletasMatricula: [],
@@ -146,6 +168,7 @@ const DocumentForm = () => {
     studentRegistration: "",
     link: "",
     subjectCount: "",
+    studentGraduations: [],
   });
   const [errors, setErrors] = useState<Errors>({});
 
@@ -171,7 +194,7 @@ const DocumentForm = () => {
     setLoading(true);
     try {
       const res = await getDoc(id_number);
-      const data = res[0][0];
+      const data = res;
       const parsedExpediente = {
         ...data,
         career: Array.isArray(data.career)
@@ -180,12 +203,14 @@ const DocumentForm = () => {
         grade: Array.isArray(data.grade)
           ? data.grade
           : JSON.parse(data.grade || "[]"),
+        modalidadGraduacion: Array.isArray(data.modalidadGraduacion)
+          ? data.modalidadGraduacion
+          : JSON.parse(data.modalidadGraduacion || "[]"),
       };
       setFormData({
         ...formData,
         ...parsedExpediente,
       });
-      console.log(parsedExpediente)
     } catch (error) {
       toast.error("Error al obtener expediente");
       console.error("Error al obtener expediente:", error);
@@ -219,17 +244,20 @@ const DocumentForm = () => {
       ...formData,
       [name]: value,
     };
-
-    if ((name === "grade" || name === "career") && index !== null) {
+    
+    if ((name === "grade" || name === "career" || name === "modalidadGraduacion") && index !== null) {
       const i = parseInt(index);
       const updatedArray = [...(formData[name] || [])];
       updatedArray[i] = value;
       updatedForm[name] = updatedArray;
     }
     
-    if (id === "modalidadGraduacion" ) {
-      updatedForm.qualifications = "";
-      updatedForm.actasCalificacion = [];
+    if ((id === "studentGraduations" || id === "modalidadGraduacion") && index !== null) {
+      const i = parseInt(index);
+      if (updatedForm.studentGraduations[i]) {
+        updatedForm.studentGraduations[i].qualifications = [""];
+        updatedForm.studentGraduations[i].graduation = [""];
+      }
     }
   
     if (id === "subjectCount" && parseInt(value) > 4 ) {
@@ -320,7 +348,7 @@ const DocumentForm = () => {
           {Array.from({ length: parseInt(formData.subjectCount) || 0 }).map((_, idx) => (
             <div className="border border-[#002E60] p-2 rounded-lg" key={idx}>
               <p className="text-[#002E60] font-bold underline text-sm mb-2">Carrera #{idx + 1}</p>
-              <div>
+              <div className="mb-2">
                 <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Grado</label>
                 <select data-index={idx} id="grade" name="grade" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.grade[idx] ?? ""}>
                   <option value="">Seleccionar</option>
@@ -332,7 +360,7 @@ const DocumentForm = () => {
                 {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
               </div>
 
-              <div>
+              <div className="mb-2">
                 <label htmlFor="career" className="block text-sm font-medium text-gray-700">Carrera</label>
                 <select data-index={idx} id="career" name="career" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.career[idx] ?? ""}>
                   <option value="">Seleccionar</option>
@@ -347,49 +375,49 @@ const DocumentForm = () => {
                 </select>
                 {errors.career && <p className="text-red-500 text-sm">{errors.career}</p>}
               </div>
+
+              <div className="mb-2">
+                <label htmlFor="modalidadGraduacion" className="block text-sm font-medium text-gray-700">Modalidad de graduación</label>
+                <select data-index={idx} id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.modalidadGraduacion[idx] ?? ""}>
+                  <option value="">Seleccionar</option>
+                  <option value="Tesina">Tesina</option>
+                  <option value="Tesis">Tesis</option>
+                  <option value="Pruebas de grado">Pruebas de grado</option>
+                  <option value="Sin registro">Sin registro</option>
+                </select>
+              </div>
+              
+              {formData.modalidadGraduacion?.[idx] && (
+                <>
+                  {formData.modalidadGraduacion?.[idx] === 'Tesina' || formData.modalidadGraduacion?.[idx] === 'Tesis' ? (
+                     <>
+                      {createCheckboxGroup(idx, "Actas de calificación", "actasCalificacion", [
+                        "Acta de calificación de tesis o tesina",
+                      ], formData, setFormData)}
+                    </>
+                  ) : null}
+                  {formData.modalidadGraduacion?.[idx] === 'Pruebas de grado' ? (
+                     <>
+                      {createCheckboxGroup(idx, "Actas de calificación", "actasCalificacion", [
+                        "Actas de calificación de pruebas de grado 1",
+                        "Actas de calificación de pruebas de grado 2",
+                        "Actas de calificación de pruebas de grado 3",
+                        "Actas de calificación de pruebas de grado 4"
+                      ], formData, setFormData)}
+                    </>
+                  ) : null}
+                  {formData.modalidadGraduacion != 'Sin registro' ? (
+                    <>
+                      <div className="hidden">
+                        <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
+                        <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications || ''} />
+                      </div>
+                    </>
+                  ) : null}
+                </>
+              )}
             </div>
           ))}
-
-          <div>
-            <label htmlFor="modalidadGraduacion" className="block text-sm font-medium text-gray-700">Modalidad de graduación</label>
-            <select id="modalidadGraduacion" name="modalidadGraduacion" className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white text-black" onChange={handleChange} value={formData.modalidadGraduacion}>
-              <option value="">Seleccionar</option>
-              <option value="Tesina">Tesina</option>
-              <option value="Tesis">Tesis</option>
-              <option value="Pruebas de grado">Pruebas de grado</option>
-              <option value="Sin registro">Sin registro</option>
-            </select>
-          </div>
-
-          {formData.modalidadGraduacion && (
-            <>
-              {formData.modalidadGraduacion === 'Tesina' || formData.modalidadGraduacion === 'Tesis' ? (
-                <>
-                  {createCheckboxGroup("Actas de calificación", "actasCalificacion", [
-                    "Acta de calificación de tesis o tesina",
-                  ], formData, setFormData)}
-                </>
-              ) : null}
-              {formData.modalidadGraduacion === 'Pruebas de grado' ? (
-                <>
-                  {createCheckboxGroup("Actas de calificación", "actasCalificacion", [
-                    "Actas de calificación de pruebas de grado 1",
-                    "Actas de calificación de pruebas de grado 2",
-                    "Actas de calificación de pruebas de grado 3",
-                    "Actas de calificación de pruebas de grado 4"
-                  ], formData, setFormData)}
-                </>
-              ) : null}
-              {formData.modalidadGraduacion != 'Sin registro' ? (
-                <>
-                  <div className="hidden">
-                    <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">Notas (en caso de que sean más de una, separarlas por comas)</label>
-                    <input placeholder="Ejemplo: (87, 90...)" id="qualifications" name="qualifications" type="text" className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white" onChange={handleChange} value={formData.qualifications || ''} />
-                  </div>
-                </>
-              ) : null}
-            </>
-          )}
 
           <div>
             <label htmlFor="studentCondition" className="block text-sm font-medium text-gray-700">Condición del estudiante</label>

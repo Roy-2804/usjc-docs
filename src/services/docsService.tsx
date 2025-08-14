@@ -23,8 +23,8 @@ export const getDocs = async (data: FilterData = {}) => {
   return docData;
 };
 
-export const getDoc = async (id: string = ""): Promise<FormData[][]> => {
-  const response = await axios.get<FormData[][]>(`${API_URL}/api/docs/node/${id}`, {
+export const getDoc = async (id: string = ""): Promise<FormData> => {
+  const response = await axios.get<FormData>(`${API_URL}/api/docs/node/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

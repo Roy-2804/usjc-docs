@@ -190,8 +190,15 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
               <Text style={styles.label}>Cantidad de carreras:</Text> {student.subjectCount}
             </Text>
             <Text style={[styles.cell, styles.wide]}>
-              <Text style={styles.label}>Última Matrícula:</Text> {student.studentRegistration ? student.studentRegistration : "Sin registro"}
-            </Text>
+            <Text style={styles.label}>Última Matrícula:</Text>{" "}
+            {student.studentRegistration
+              ? new Date(student.studentRegistration).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
+              : "Sin registro"}
+          </Text>
           </View>
           <Text style={styles.full}>Carreras</Text>
           {Array.from({ length: parseInt(student.subjectCount) || 0 }).map((_, idx) => (
@@ -299,52 +306,49 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
           <Text style={styles.subtitle}>MODALIDAD DE GRADUACIÓN</Text>
           {student.modalidadGraduacion ? (
                <>
-                <View style={styles.checkboxWrapper}>
-                  <Text style={styles.checkboxLabel}>{student.modalidadGraduacion}</Text>
-                  <Text style={[styles.checkbox, styles.green]}></Text>
-                </View>
-  
-                {(() => {
-                  const actasCalificacion = student.actasCalificacion as string | string[] | null;
-                  let actas: string[] = [];
-
-                  if (typeof actasCalificacion === "string" && actasCalificacion.trim() !== "") {
-                    try {
-                      let parsed = JSON.parse(actasCalificacion);
-
-                      // Si sigue siendo string tras el primer parse, parsear de nuevo
-                      if (typeof parsed === "string") {
-                        parsed = JSON.parse(parsed);
-                      }
-
-                      if (Array.isArray(parsed)) {
-                        actas = parsed;
-                      } else {
-                        console.error("actasCalificacion JSON parsed but is not an array:", parsed);
-                      }
-                    } catch (error) {
-                      console.error("Error parsing actasCalificacion:", error);
-                    }
-                  } else if (Array.isArray(actasCalificacion)) {
-                    actas = actasCalificacion;
-                  }
-
-                  return actas.map((acta: string, idx: number) => (
-                    <View style={styles.checkboxWrapper} key={idx}>
-                      <Text style={styles.checkboxLabel}>{acta}</Text>
-                      <Text style={[styles.checkbox, styles.green]}></Text>
-                    </View>
-                  ));
-                })()}
-  
-                {typeof student.qualifications === "string" &&
-                  <View style={styles.checkboxWrapper}>
-                    <Text style={styles.listItem}>Notas:</Text>
-                    {(student.qualifications as string).split(",").map((q, idx, arr) => (
-                      <Text style={styles.listItem} key={idx}>{q.trim().replace(/"/g, "")} {idx < arr.length - 1 ? ", " : ""}</Text>
-                    ))}
+                {Array.from({ length: parseInt(student.subjectCount) || 0 }).map((_, idx) => (
+                  <View key={idx} style={{ marginBottom: 25 }}>
+                    <Text style={styles.checkboxLabel}>Modalidad: {student.modalidadGraduacion[idx] || "(Sin modalidad)"} {"\n"}</Text>
+                    {(() => {
+                       let parsedGraduations: string[] = [];
+                       let parsedQualifications: (string | number)[] = [];
+                   
+                       try {
+                         const graduationString = student.studentGraduations[idx].graduation as string;
+                         if (typeof graduationString === 'string') {
+                           parsedGraduations = JSON.parse(graduationString);
+                         }
+                   
+                         const qualificationsString = student.studentGraduations[idx].qualifications as string;
+                         if (typeof qualificationsString === 'string') {
+                           const tempQualifications = JSON.parse(qualificationsString);
+                           
+                           if (Array.isArray(tempQualifications)) {
+                             parsedQualifications = tempQualifications;
+                           } else {
+                             parsedQualifications = [tempQualifications];
+                           }
+                         }
+                   
+                       } catch (error) {
+                         console.error(`Error al parsear los datos en el índice ${idx}:`, error);
+                         return (
+                           <Text style={{ fontStyle: 'italic', color: '#c53030' }}>Error: Datos de graduación mal formados.</Text>
+                         );
+                       }
+                       
+                      return (
+                        <View>
+                          {parsedGraduations.map((graduation, index) => (
+                            <Text key={index} style={styles.checkboxLabel}>
+                              {graduation}: {parsedQualifications[index]}
+                            </Text>
+                          ))}
+                        </View>
+                      );
+                    })()}
                   </View>
-                }
+                ))}
                </>
               ) : (
                 <Text style={styles.checkboxLabel}>Modalidad de graduación no indicada</Text>

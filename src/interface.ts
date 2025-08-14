@@ -6,7 +6,7 @@ export interface FormData {
     gender: string;
     grade: string[];
     career: string[];
-    modalidadGraduacion: string;
+    modalidadGraduacion: string | string[];
     documentosAdjuntos: string[];
     convalidaciones: string[];
     boletasMatricula: string[];
@@ -20,6 +20,14 @@ export interface FormData {
     studentRegistration: string;
     link: string;
     subjectCount: string;
+    studentGraduations: StudentGraduations[];
+}
+
+export interface StudentGraduations {
+    id: string;
+    uid: string;
+    qualifications: string | string[];
+    graduation: string | string[];
 }
 
 export interface Errors {

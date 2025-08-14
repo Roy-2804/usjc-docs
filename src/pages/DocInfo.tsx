@@ -15,8 +15,8 @@ const DocInfo = () => {
 
   const fetchExpedientes = async (id_number: string) => {
     try {
-      const res: FormData[][] = await getDoc(id_number);
-      const raw = res[0][0];
+      const res: FormData = await getDoc(id_number);
+      const raw = res;
 
       const parsedExpediente = {
         ...raw,
@@ -26,6 +26,9 @@ const DocInfo = () => {
         grade: Array.isArray(raw.grade)
           ? raw.grade
           : JSON.parse(raw.grade || "[]"),
+        modalidadGraduacion: Array.isArray(raw.modalidadGraduacion)
+          ? raw.modalidadGraduacion
+          : JSON.parse(raw.modalidadGraduacion || "[]"),
       };
       setExpediente(parsedExpediente);
     } catch (err) {
