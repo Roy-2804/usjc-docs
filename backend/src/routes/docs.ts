@@ -78,14 +78,30 @@ router.post("/new-doc", async (req: Request, res: Response): Promise<any> => {
     const insertedDocId = (result as any).insertId;
     if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
       for (const graduation of studentGraduations) {
-        await connection.query(
-          `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
-          [
-            insertedDocId,
-            graduation.qualifications ? JSON.stringify(graduation.qualifications) : null,
-            graduation.graduation ? JSON.stringify(graduation.graduation) : null,
-          ]
-        );
+        let qualificationsToInsert = null;
+        let graduationToInsert = null;
+    
+        try {
+          if (graduation.qualifications) {
+            qualificationsToInsert = JSON.stringify(graduation.qualifications);
+          }
+          
+          if (graduation.graduation) {
+            graduationToInsert = JSON.stringify(graduation.graduation);
+          }
+    
+          await connection.query(
+            `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
+            [
+              insertedDocId,
+              qualificationsToInsert,
+              graduationToInsert,
+            ]
+          );
+        } catch (insertError) {
+          console.error("Error al insertar una graduación:", insertError);
+          throw insertError;
+        }
       }
     }
 
@@ -270,32 +286,29 @@ router.put("/update/node/:id", async (req: Request, res: Response): Promise<any>
     if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
       for (const graduation of studentGraduations) {
         let qualificationsToInsert = null;
+        let graduationToInsert = null;
 
-        if (graduation.qualifications) {
-          if (typeof graduation.qualifications === 'string') {
-            qualificationsToInsert = JSON.stringify(JSON.parse(graduation.qualifications));
-          } else if (Array.isArray(graduation.qualifications)) {
+        try {
+          if (graduation.qualifications) {
             qualificationsToInsert = JSON.stringify(graduation.qualifications);
           }
-        }
-
-        let graduationToInsert = null;
-        if (graduation.graduation) {
-          if (typeof graduation.graduation === 'string') {
-            graduationToInsert = JSON.stringify(JSON.parse(graduation.graduation));
-          } else if (Array.isArray(graduation.graduation)) {
+          
+          if (graduation.graduation) {
             graduationToInsert = JSON.stringify(graduation.graduation);
           }
+    
+          await connection.query(
+            `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
+            [
+              id,
+              qualificationsToInsert,
+              graduationToInsert,
+            ]
+          );
+        } catch (insertError) {
+          console.error("Error al insertar una graduación:", insertError);
+          throw insertError;
         }
-        
-        await connection.query(
-          `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`,
-          [
-            id,
-            qualificationsToInsert,
-            graduationToInsert,
-          ]
-        );
       }
     }
 
