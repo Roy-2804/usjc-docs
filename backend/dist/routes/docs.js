@@ -61,27 +61,31 @@ router.post("/new-doc", (req, res) => __awaiter(void 0, void 0, void 0, function
         const [result] = yield connection.query(query, values);
         const insertedDocId = result.insertId;
         if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
+            const insertValues = [];
+            const placeholders = studentGraduations.map(() => '(?, ?, ?)').join(',');
             for (const graduation of studentGraduations) {
                 let qualificationsToInsert = null;
-                let graduationToInsert = null;
-                try {
-                    if (graduation.qualifications) {
+                if (graduation.qualifications) {
+                    if (typeof graduation.qualifications === 'string') {
+                        qualificationsToInsert = graduation.qualifications;
+                    }
+                    else if (Array.isArray(graduation.qualifications)) {
                         qualificationsToInsert = JSON.stringify(graduation.qualifications);
                     }
-                    if (graduation.graduation) {
+                }
+                let graduationToInsert = null;
+                if (graduation.graduation) {
+                    if (typeof graduation.graduation === 'string') {
+                        graduationToInsert = graduation.graduation;
+                    }
+                    else if (Array.isArray(graduation.graduation)) {
                         graduationToInsert = JSON.stringify(graduation.graduation);
                     }
-                    yield connection.query(`INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`, [
-                        insertedDocId,
-                        qualificationsToInsert,
-                        graduationToInsert,
-                    ]);
                 }
-                catch (insertError) {
-                    console.error("Error al insertar una graduación:", insertError);
-                    throw insertError;
-                }
+                insertValues.push(insertedDocId, qualificationsToInsert, graduationToInsert);
             }
+            const insertSql = `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES ${placeholders}`;
+            yield connection.query(insertSql, insertValues);
         }
         yield connection.commit();
         res.status(201).json({ message: "Expediente registrado correctamente" });
@@ -207,27 +211,31 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         yield connection.query(sql, values);
         yield connection.query(`DELETE FROM user_graduations WHERE uid = ?`, [id]);
         if (Array.isArray(studentGraduations) && studentGraduations.length > 0) {
+            const insertValues = [];
+            const placeholders = studentGraduations.map(() => '(?, ?, ?)').join(',');
             for (const graduation of studentGraduations) {
                 let qualificationsToInsert = null;
-                let graduationToInsert = null;
-                try {
-                    if (graduation.qualifications) {
+                if (graduation.qualifications) {
+                    if (typeof graduation.qualifications === 'string') {
+                        qualificationsToInsert = graduation.qualifications;
+                    }
+                    else if (Array.isArray(graduation.qualifications)) {
                         qualificationsToInsert = JSON.stringify(graduation.qualifications);
                     }
-                    if (graduation.graduation) {
+                }
+                let graduationToInsert = null;
+                if (graduation.graduation) {
+                    if (typeof graduation.graduation === 'string') {
+                        graduationToInsert = graduation.graduation;
+                    }
+                    else if (Array.isArray(graduation.graduation)) {
                         graduationToInsert = JSON.stringify(graduation.graduation);
                     }
-                    yield connection.query(`INSERT INTO user_graduations (uid, qualifications, graduation) VALUES (?, ?, ?)`, [
-                        id,
-                        qualificationsToInsert,
-                        graduationToInsert,
-                    ]);
                 }
-                catch (insertError) {
-                    console.error("Error al insertar una graduación:", insertError);
-                    throw insertError;
-                }
+                insertValues.push(id, qualificationsToInsert, graduationToInsert);
             }
+            const insertSql = `INSERT INTO user_graduations (uid, qualifications, graduation) VALUES ${placeholders}`;
+            yield connection.query(insertSql, insertValues);
         }
         yield connection.commit();
         res.status(200).json({ message: "Expediente actualizado correctamente" });
