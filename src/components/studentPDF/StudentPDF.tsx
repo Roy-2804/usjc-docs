@@ -11,6 +11,10 @@ import {
 import {FormData} from "../../interface"
 import { generateQrBase64 } from '../../services/docsService';
 
+const parseLocalDate = (dateStr: string) => {
+  const [year, month, day] = dateStr.split("-");
+  return new Date(Number(year), Number(month) - 1, Number(day));
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -192,7 +196,7 @@ const StudentPDF: React.FC<Props> = ({ student }) => {
             <Text style={[styles.cell, styles.wide]}>
             <Text style={styles.label}>Última Matrícula:</Text>{" "}
             {student.studentRegistration
-              ? new Date(student.studentRegistration).toLocaleDateString("es-ES", {
+              ? parseLocalDate(student.studentRegistration).toLocaleDateString("es-ES", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",

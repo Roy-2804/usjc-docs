@@ -448,7 +448,11 @@ const DocumentForm = () => {
               id="studentRegistration" 
               name="studentRegistration"
               onChange={handleChange}
-              value={formData.studentRegistration}
+              value={
+                formData.studentRegistration
+                  ? new Date(formData.studentRegistration).toISOString().split("T")[0]
+                  : ""
+              }
               className="text-black mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 bg-white"
             />
           </div>

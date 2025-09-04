@@ -244,7 +244,12 @@ router.put("/update/node/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         if (connection)
             yield connection.rollback();
         console.error("Error al actualizar expediente:", error);
-        res.status(500).json({ error: "Error al actualizar expediente" });
+        if (error instanceof Error) {
+            res.status(500).json({ error: "Error al actualizar expediente", details: error.message });
+        }
+        else {
+            res.status(500).json({ error: "Error al actualizar expediente", details: "Ha ocurrido un error desconocido." });
+        }
     }
     finally {
         if (connection)
